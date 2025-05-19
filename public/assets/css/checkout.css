@@ -1,0 +1,285 @@
+:root {
+    --primary: #f3c623;
+    --dark-primary: #d6a801;
+    --darker-primary: #a08000;
+    --light-primary: #ffe054;
+    --lighter-primary: #fdf8df;
+    --secondary: #f7f7f7;
+    --light: #f8f9fa;
+    --dark: #1b1b1d;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --muted: #6c757d;
+}
+
+.checkout-container {
+    margin: 0rem auto;
+    padding: 0px;
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+.order-summary {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#orderSummary {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#orderSummary .d-flex.mb-4 {
+    min-width: 0;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+#orderSummary .product-thumbnail {
+    flex-shrink: 0;
+    max-width: 80px;
+}
+
+#orderSummary div {
+    min-width: 0;
+}
+
+#orderSummary>div {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#orderSummary h6 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#orderSummary small,
+#orderSummary div {
+    overflow-wrap: break-word;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: var(--primary);
+}
+
+.product-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.secure-note {
+    font-size: 0.9rem;
+    color: #6b7177;
+}
+
+.checkout-header {
+    background: white;
+    border-bottom: 1px solid #e1e3e5;
+    padding: 1.5rem 0;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.header-logo img {
+    height: 32px;
+    width: auto;
+}
+
+.logo-text {
+    font-weight: 600;
+    color: #2d333f;
+    font-size: 1.25rem;
+}
+
+/* Map */
+#map {
+    height: 400px;
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.map-container {
+    position: relative;
+}
+
+.current-location-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.current-location-btn:hover {
+    background: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: var(--dark-primary);
+    box-shadow: 0 0 0 0.2rem rgba(160, 128, 0, 0.25);
+}
+
+.address-header {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #2d333f;
+}
+
+.instruction-text {
+    color: #6b7177;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.map-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Stepper */
+.stepper {
+    position: relative;
+    margin: 2rem 10rem;
+}
+
+.stepper-progress {
+    height: 4px;
+    background-color: #e9ecef;
+    position: absolute;
+    top: 24px;
+    left: 50px;
+    right: 50px;
+    width: calc(100% - 100px);
+}
+
+.stepper-progress-bar {
+    max-width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.stepper-item:first-child {
+    margin-left: 20px;
+}
+
+.stepper-item:last-child {
+    margin-right: 20px;
+}
+
+.stepper-item {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    flex-direction: column;
+}
+
+.stepper-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-weight: 500;
+    color: #6c757d;
+    border: 3px solid white;
+    transition: all 0.3s ease;
+}
+
+.stepper-icon i {
+    font-size: large;
+}
+
+.stepper-item.active .stepper-icon {
+    background-color: var(--dark-primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.stepper-title {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.multi-step-form {
+    max-width: 100%;
+    overflow-x: hidden;
+    min-width: 0;
+}
+
+.step {
+    display: none;
+    animation: fadeIn 1s ease-in;
+}
+
+.step.active {
+    display: block;
+}
+
+.step[data-step="3"] .card {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.delivery-section {
+    display: none;
+}
+
+.order-type-delivery .delivery-section {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .header-logo .logo-text {
+        display: none;
+    }
+
+    .stepper {
+        margin: 2rem 5rem;
+    }
+
+    #orderSummary .d-flex.mb-4 {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .product-thumbnail {
+        margin-bottom: 1rem;
+    }
+
+    #orderSummary h6 {
+        white-space: normal;
+    }
+}

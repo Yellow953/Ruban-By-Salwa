@@ -1,0 +1,217 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\BankNote;
+use App\Models\Business;
+use App\Models\Category;
+use App\Models\Client;
+use App\Models\Currency;
+use App\Models\Log;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\Purchase;
+use App\Models\SearchRoute;
+use App\Models\Subscription;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
+class AppController extends Controller
+{
+    public function index()
+    {
+        if (auth()->user()->role == 'super admin') {
+            $business_count = Business::count();
+            $user_count = User::withoutGlobalScopes()->count();
+            $subscription_count = Subscription::count();
+            $order_count = Order::withoutGlobalScopes()->count();
+            $purchase_count = Purchase::withoutGlobalScopes()->count();
+            $product_count = Product::withoutGlobalScopes()->count();
+            $log_count = Log::withoutGlobalScopes()->count();
+            $latest_activity = Log::withoutGlobalScopes()->orderBy('created_at', 'DESC')->limit(10)->get();
+
+            $data = compact('business_count', 'user_count', 'subscription_count', 'order_count', 'purchase_count', 'product_count', 'log_count', 'latest_activity');
+            return view('super_admin', $data);
+        } else {
+            $business = auth()->user()->business;
+            $currency = auth()->user()->currency;
+            $currencies = Currency::select('id', 'code')->get();
+            $bank_notes = BankNote::where('currency_code', auth()->user()->currency->code)->get();
+            $last_order = Order::whereNotNull('cashier_id')->latest()->first();
+            $clients = Client::select('id', 'name')->orderBy('created_at', 'DESC')->get();
+            $categories = Category::select('id', 'name', 'image')
+                ->with([
+                    'products' => function ($query) {
+                        $query->where('quantity', '>', 0)
+                            ->with(['variants.options']);
+                    }
+                ])
+                ->get();
+
+            $data = compact('categories', 'currency', 'currencies', 'bank_notes', 'last_order', 'business', 'clients');
+            return view('index', $data);
+        }
+    }
+
+    public function checkout(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $text = '';
+
+            $order = Order::create([
+                'cashier_id' => auth()->user()->id,
+                'client_id' => $request->client_id,
+                'currency_id' => auth()->user()->currency_id,
+                'order_number' => Order::generate_number(),
+                'sub_total' => $request->total,
+                'tax' => $request->tax,
+                'discount' => $request->discount,
+                'total' => $request->grand_total,
+                'products_count' => count(json_decode($request->order_items, true)),
+                'note' => $request->note ?? null,
+            ]);
+
+            $text .= 'User ' . ucwords(auth()->user()->name) . ' created Order NO: ' . $order->order_number . " of Sub Total: {$request->total}, tax: {$request->tax}, discount: {$request->discount}, Total: {$request->grand_total}";
+
+            $orderItems = json_decode($request->order_items, true);
+
+            $text .= " { ";
+            foreach ($orderItems as $item) {
+                $product = Product::find($item['id']);
+
+                if ($product->quantity - $item['quantity'] < 0) {
+                    continue;
+                }
+
+                $variantTotalPrice = $item['price'];
+                if (isset($item['options']) && is_array($item['options'])) {
+                    foreach ($item['options'] as $option) {
+                        $variantTotalPrice += $option['optionPrice'];
+                    }
+                }
+
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'total' => $variantTotalPrice * $item['quantity'],
+                    'variant_details' => isset($item['options']) ? json_encode($item['options']) : null,
+                ]);
+
+                $product->update(['quantity' => ($product->quantity - $item['quantity'])]);
+
+                $text .= "Product ID: {$item['id']}, Product Name: {$item['name']}, Price: {$item['price']}, Quantity: {$item['quantity']} | ";
+            }
+
+            $text .= " } , datetime: " . now();
+
+            Log::create([
+                'text' => $text,
+            ]);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Order successfully created.'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'An error occurred while processing your order. $e:' . $e], 500);
+        }
+    }
+
+    public function sync(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'orderItems' => 'required|array',
+                'total' => 'required|numeric',
+                'amountPaid' => 'required|numeric',
+                'changeDue' => 'required|numeric',
+                'note' => 'nullable|string',
+            ]);
+
+            $text = '';
+            $tax = $request->tax ?? 0;
+            $discount = $request->discount ?? 0;
+
+            $order = Order::create([
+                'cashier_id' => auth()->user()->id,
+                'client_id' => $request->client_id,
+                'currency_id' => auth()->user()->currency_id,
+                'order_number' => Order::generate_number(),
+                'sub_total' => $request->total - $tax + $discount,
+                'tax' => $tax,
+                'discount' => $discount,
+                'total' => $request->total,
+                'products_count' => count($request->orderItems),
+                'note' => $request->note,
+            ]);
+            $text .= 'User ' . ucwords(auth()->user()->name) . ' created Order NO: ' . $order->order_number . " of Sub Total: {$request->total}, tax: {$tax}, discount: {$discount}, Total: {$request->grand_total}";
+
+            foreach ($request->orderItems as $item) {
+                $product = Product::find($item['id']);
+
+                if ($product->quantity - $item['quantity'] < 0) {
+                    continue;
+                }
+
+                $variantTotalPrice = $item['price'];
+                if (isset($item['options']) && is_array($item['options'])) {
+                    foreach ($item['options'] as $option) {
+                        $variantTotalPrice += $option['optionPrice'];
+                    }
+                }
+
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                    'total' => $variantTotalPrice * $item['quantity'],
+                    'variant_details' => isset($item['options']) ? json_encode($item['options']) : null,
+                ]);
+
+                $product->update(['quantity' => ($product->quantity - $item['quantity'])]);
+
+                $text .= "Product ID: {$item['id']}, Product Name: {$item['name']}, Price: {$item['price']}, Quantity: {$item['quantity']} | ";
+            }
+
+            $text .= " } , datetime: " . now();
+            Log::create(['text' => $text]);
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Order synced successfully.'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Error syncing order: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function custom_logout()
+    {
+        Session::flush();
+        Auth::logout();
+
+        return redirect('login');
+    }
+
+    public function navigate(Request $request)
+    {
+        $res = SearchRoute::where('name', $request->route)->first();
+
+        if (!$res) {
+            return response()->json(['error' => 'Route not found'], 404);
+        } else {
+            return redirect()->route($res->link);
+        }
+    }
+}
