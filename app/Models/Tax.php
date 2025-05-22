@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tax extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = [];
 
@@ -20,7 +19,7 @@ class Tax extends Model
     // Permissions
     public function can_delete()
     {
-        return auth()->user()->role == "super admin" && $this->businesses->count() == 0;
+        return auth()->user()->role == "admin" && $this->businesses->count() == 0;
     }
 
     // Filter

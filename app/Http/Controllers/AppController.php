@@ -11,10 +11,7 @@ use App\Models\Log;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
-use App\Models\Purchase;
 use App\Models\SearchRoute;
-use App\Models\Subscription;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,37 +21,23 @@ class AppController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role == 'super admin') {
-            $business_count = Business::count();
-            $user_count = User::withoutGlobalScopes()->count();
-            $subscription_count = Subscription::count();
-            $order_count = Order::withoutGlobalScopes()->count();
-            $purchase_count = Purchase::withoutGlobalScopes()->count();
-            $product_count = Product::withoutGlobalScopes()->count();
-            $log_count = Log::withoutGlobalScopes()->count();
-            $latest_activity = Log::withoutGlobalScopes()->orderBy('created_at', 'DESC')->limit(10)->get();
+        $business = Business::firstOrFail();
+        $currency = auth()->user()->currency;
+        $currencies = Currency::select('id', 'code')->get();
+        $bank_notes = BankNote::where('currency_code', auth()->user()->currency->code)->get();
+        $last_order = Order::whereNotNull('cashier_id')->latest()->first();
+        $clients = Client::select('id', 'name')->orderBy('created_at', 'DESC')->get();
+        $categories = Category::select('id', 'name', 'image')
+            ->with([
+                'products' => function ($query) {
+                    $query->where('quantity', '>', 0)
+                        ->with(['variants.options']);
+                }
+            ])
+            ->get();
 
-            $data = compact('business_count', 'user_count', 'subscription_count', 'order_count', 'purchase_count', 'product_count', 'log_count', 'latest_activity');
-            return view('super_admin', $data);
-        } else {
-            $business = auth()->user()->business;
-            $currency = auth()->user()->currency;
-            $currencies = Currency::select('id', 'code')->get();
-            $bank_notes = BankNote::where('currency_code', auth()->user()->currency->code)->get();
-            $last_order = Order::whereNotNull('cashier_id')->latest()->first();
-            $clients = Client::select('id', 'name')->orderBy('created_at', 'DESC')->get();
-            $categories = Category::select('id', 'name', 'image')
-                ->with([
-                    'products' => function ($query) {
-                        $query->where('quantity', '>', 0)
-                            ->with(['variants.options']);
-                    }
-                ])
-                ->get();
-
-            $data = compact('categories', 'currency', 'currencies', 'bank_notes', 'last_order', 'business', 'clients');
-            return view('index', $data);
-        }
+        $data = compact('categories', 'currency', 'currencies', 'bank_notes', 'last_order', 'business', 'clients');
+        return view('index', $data);
     }
 
     public function checkout(Request $request)

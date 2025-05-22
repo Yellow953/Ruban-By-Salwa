@@ -11,11 +11,7 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->longText('text');
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
-
-            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 

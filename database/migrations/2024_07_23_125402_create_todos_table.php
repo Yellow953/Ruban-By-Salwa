@@ -14,10 +14,7 @@ return new class extends Migration
             $table->enum('status', ['ongoing', 'completed'])->default('ongoing');
             $table->bigInteger("user_id")->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-
-            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 

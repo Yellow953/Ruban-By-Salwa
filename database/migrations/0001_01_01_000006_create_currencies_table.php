@@ -14,11 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('symbol')->nullable();
             $table->double('rate')->default(0);
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
-
-            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 

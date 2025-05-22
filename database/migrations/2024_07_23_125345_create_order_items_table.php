@@ -17,8 +17,8 @@ return new class extends Migration
             $table->double('tax')->unsigned()->default(0);
             $table->double('discount')->unsigned()->default(0);
             $table->double('total')->unsigned();
+            $table->json('variant_details')->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');

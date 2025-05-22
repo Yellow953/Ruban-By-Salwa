@@ -12,11 +12,9 @@ return new class extends Migration
             $table->id();
             $table->bigInteger("product_id")->unsigned();
             $table->string('barcode');
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 

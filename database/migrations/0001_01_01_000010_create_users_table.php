@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
@@ -21,12 +20,8 @@ return new class extends Migration
             $table->string('role')->default('user');
             $table->string('phone')->nullable();
             $table->string('image')->nullable();
-            $table->boolean('terms_agreed')->default(false);
-            $table->dateTime('terms_agreed_at')->nullable();
-            $table->bigInteger("business_id")->unsigned()->nullable();
             $table->bigInteger("currency_id")->unsigned()->nullable();
 
-            $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('currency_id')->references('id')->on('currencies')->default(1);;
         });
 

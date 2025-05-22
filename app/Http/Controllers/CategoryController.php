@@ -31,7 +31,7 @@ class CategoryController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:categories,name',
+            'name' => 'required|max:255|string',
         ]);
 
         if ($request->hasFile('image')) {
@@ -68,7 +68,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|max:255|string'
         ]);
 
         if ($request->hasFile('image')) {

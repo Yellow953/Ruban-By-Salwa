@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             ClientSeeder::class,
             SearchRouteSeeder::class,
             BankNoteSeeder::class,
-            TableSeeder::class,
         ]);
     }
 }

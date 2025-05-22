@@ -13,11 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('image')->default('/assets/images/default.png');
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
-
-            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 

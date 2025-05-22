@@ -13,12 +13,9 @@ return new class extends Migration
             $table->double('start_cash')->unsigned()->default(1);
             $table->double('end_cash')->unsigned()->nullable();
             $table->date('date')->nullable();
-            $table->bigInteger("business_id")->unsigned();
             $table->bigInteger("currency_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
 
-            $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('currency_id')->references('id')->on('currencies');
         });
     }

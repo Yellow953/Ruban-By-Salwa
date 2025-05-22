@@ -16,7 +16,6 @@ return new class extends Migration
             $table->double('cost')->unsigned()->default(0);
             $table->double('total')->unsigned()->default(0);
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('purchase_id')->references('id')->on('purchases');
             $table->foreign('product_id')->references('id')->on('products');

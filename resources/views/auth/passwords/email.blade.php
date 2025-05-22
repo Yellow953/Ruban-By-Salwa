@@ -1,47 +1,51 @@
-@extends('layouts.app')
+@extends('auth.app')
+
+@section('title', 'forget password')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+<!--begin::Form-->
+<form class="form w-100" novalidate="novalidate" action="{{ route('password.email') }}" enctype="multipart/form-data"
+    method="POST">
+    @csrf
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <!--begin::Heading-->
+    <div class="text-center mb-10">
+        <!--begin::Title-->
+        <h1 class="text-dark fw-bolder mb-3">Forgot Password ?</h1>
+        <!--end::Title-->
+        <!--begin::Link-->
+        <div class="text-gray-500 fw-semibold fs-6">Enter your email to reset your password.</div>
+        <!--end::Link-->
     </div>
-</div>
+    <!--begin::Heading-->
+
+    @if (session('status'))
+    <div class="alert alert-success" role="alert">
+        {{ session('status') }}
+    </div>
+    @endif
+
+    <!--begin::Input group=-->
+    <div class="fv-row mb-8">
+        <input id="email" type="email" class="form-control bg-transparent @error('email') is-invalid @enderror"
+            name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+        @error('email')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
+    </div>
+    <!--begin::Actions-->
+    <div class="d-flex flex-wrap justify-content-center pb-lg-0">
+        <button type="submit" class="btn btn-primary me-4">
+            <!--begin::Indicator label-->
+            <span class="indicator-label">Submit</span>
+            <!--end::Indicator label-->
+        </button>
+        <a href="{{ route('login') }}" class="btn btn-light">Cancel</a>
+    </div>
+    <!--end::Actions-->
+</form>
+<!--end::Form-->
 @endsection

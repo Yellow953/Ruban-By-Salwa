@@ -16,11 +16,8 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->double('amount')->unsigned()->default(0);
             $table->bigInteger("currency_id")->unsigned();
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
 
-            $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('currency_id')->references('id')->on('currencies');
         });
     }

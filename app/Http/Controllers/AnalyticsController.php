@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Business;
 use App\Models\Debt;
 use App\Models\Expense;
 use App\Models\Report;
@@ -11,7 +10,6 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
-use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,281 +23,138 @@ class AnalyticsController extends Controller
 
     public function index()
     {
-        if (auth()->user()->role != "super admin") {
-            // Fetch total debts for suppliers and clients
-            $clientData = Debt::whereNotNull('client_id')->get();
-            $totalClientDebt = 0;
+        // Fetch total debts for suppliers and clients
+        $clientData = Debt::whereNotNull('client_id')->get();
+        $totalClientDebt = 0;
 
-            foreach ($clientData as $cd) {
-                $totalClientDebt += ($cd->amount / $cd->currency->rate);
-            }
+        foreach ($clientData as $cd) {
+            $totalClientDebt += ($cd->amount / $cd->currency->rate);
+        }
 
-            $supplierData = Debt::whereNotNull('supplier_id')->get();
-            $totalSupplierDebt = 0;
+        $supplierData = Debt::whereNotNull('supplier_id')->get();
+        $totalSupplierDebt = 0;
 
-            foreach ($supplierData as $cd) {
-                $totalSupplierDebt += ($cd->amount / $cd->currency->rate);
-            }
+        foreach ($supplierData as $cd) {
+            $totalSupplierDebt += ($cd->amount / $cd->currency->rate);
+        }
 
-            $currency = auth()->user()->currency;
+        $currency = auth()->user()->currency;
 
-            // Fetch top products by quantity sold
-            $topProductsByQuantity = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_quantity'))
-                ->groupBy('product_id')
-                ->orderBy('total_quantity', 'desc')
-                ->limit(5)
-                ->get();
+        // Fetch top products by quantity sold
+        $topProductsByQuantity = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_id')
+            ->orderBy('total_quantity', 'desc')
+            ->limit(5)
+            ->get();
 
-            // Fetch top products by total revenue generated
-            $topProductsByRevenue = OrderItem::select('product_id', DB::raw('SUM(quantity * unit_price) as total_revenue'))
-                ->groupBy('product_id')
-                ->orderBy('total_revenue', 'desc')
-                ->limit(5)
-                ->get();
+        // Fetch top products by total revenue generated
+        $topProductsByRevenue = OrderItem::select('product_id', DB::raw('SUM(quantity * unit_price) as total_revenue'))
+            ->groupBy('product_id')
+            ->orderBy('total_revenue', 'desc')
+            ->limit(5)
+            ->get();
 
-            // Get product names for the fetched product_ids
-            $productNames = Product::whereIn('id', $topProductsByQuantity->pluck('product_id'))
-                ->orWhereIn('id', $topProductsByRevenue->pluck('product_id'))
-                ->pluck('name', 'id');
+        // Get product names for the fetched product_ids
+        $productNames = Product::whereIn('id', $topProductsByQuantity->pluck('product_id'))
+            ->orWhereIn('id', $topProductsByRevenue->pluck('product_id'))
+            ->pluck('name', 'id');
 
-            // Prepare data for quantity pie chart
-            $quantityData = $topProductsByQuantity->map(function ($product) use ($productNames) {
-                return [$productNames[$product->product_id] ?? 'Unknown', $product->total_quantity];
-            });
+        // Prepare data for quantity pie chart
+        $quantityData = $topProductsByQuantity->map(function ($product) use ($productNames) {
+            return [$productNames[$product->product_id] ?? 'Unknown', $product->total_quantity];
+        });
 
-            // Prepare data for revenue pie chart
-            $revenueData = $topProductsByRevenue->map(function ($product) use ($productNames) {
-                return [$productNames[$product->product_id] ?? 'Unknown', $product->total_revenue];
-            });
+        // Prepare data for revenue pie chart
+        $revenueData = $topProductsByRevenue->map(function ($product) use ($productNames) {
+            return [$productNames[$product->product_id] ?? 'Unknown', $product->total_revenue];
+        });
 
-            // Sales breakdown by day, week, and month
-            $salesByDay = $this->getSalesData('day');
-            $salesByWeek = $this->getSalesData('week');
-            $salesByMonth = $this->getSalesData('month');
+        // Sales breakdown by day, week, and month
+        $salesByDay = $this->getSalesData('day');
+        $salesByWeek = $this->getSalesData('week');
+        $salesByMonth = $this->getSalesData('month');
 
-            // Cash flow
+        // Cash flow
 
-            $reports = $this->getCashFlowData();
-            $cash_flow_dates = [];
-            $cash_flow_diff = [];
-            foreach ($reports as $report) {
-                $cash_flow_dates[] = $report->date;
-                $cash_flow_diff[] = $report->cash_in - $report->cash_out;
-            }
+        $reports = $this->getCashFlowData();
+        $cash_flow_dates = [];
+        $cash_flow_diff = [];
+        foreach ($reports as $report) {
+            $cash_flow_dates[] = $report->date;
+            $cash_flow_diff[] = $report->cash_in - $report->cash_out;
+        }
 
-            // Fetch products with category and calculate profit
-            $products = Product::with('category')->get()->map(function ($product) {
-                $profit = $product->price - $product->cost;
+        // Fetch products with category and calculate profit
+        $products = Product::with('category')->get()->map(function ($product) {
+            $profit = $product->price - $product->cost;
+            return [
+                'name' => $product->name,
+                'category' => $product->category->name ?? 'Unknown',
+                'image' => $product->image,
+                'profit' => $profit,
+            ];
+        });
+
+        $hourly_orders = Order::whereDate('created_at', Carbon::today())
+            ->selectRaw('HOUR(created_at) as hour, COUNT(*) as count')
+            ->groupBy('hour')
+            ->orderBy('hour')
+            ->get()
+            ->map(function ($item) {
                 return [
-                    'name' => $product->name,
-                    'category' => $product->category->name ?? 'Unknown',
-                    'image' => $product->image,
-                    'profit' => $profit,
+                    'hour' => (int) $item->hour,
+                    'count' => (int) $item->count
                 ];
             });
 
-            $hourly_orders = Order::whereDate('created_at', Carbon::today())
-                ->selectRaw('HOUR(created_at) as hour, COUNT(*) as count')
-                ->groupBy('hour')
-                ->orderBy('hour')
-                ->get()
-                ->map(function ($item) {
-                    return [
-                        'hour' => (int) $item->hour,
-                        'count' => (int) $item->count
-                    ];
-                });
+        $startOfDay = Carbon::now()->startOfDay();
+        $endOfDay = Carbon::now()->endOfDay();
 
-            $startOfDay = Carbon::now()->startOfDay();
-            $endOfDay = Carbon::now()->endOfDay();
+        $todays_orders = Order::whereBetween('created_at', [$startOfDay, $endOfDay])->get();
+        $todays_orders_count = $todays_orders->count();
+        $todays_sales = 0;
+        $todays_profit = 0;
 
-            $todays_orders = Order::whereBetween('created_at', [$startOfDay, $endOfDay])->get();
-            $todays_orders_count = $todays_orders->count();
-            $todays_sales = 0;
-            $todays_profit = 0;
+        foreach ($todays_orders as $order) {
+            foreach ($order->items as $item) {
+                $currency_rate = $order->currency->rate;
 
-            foreach ($todays_orders as $order) {
-                foreach ($order->items as $item) {
-                    $currency_rate = $order->currency->rate;
-
-                    $todays_sales += ($item->total / $currency_rate);
-                    $todays_profit += (($item->quantity * ($item->product->price - $item->product->cost)));
-                }
+                $todays_sales += ($item->total / $currency_rate);
+                $todays_profit += (($item->quantity * ($item->product->price - $item->product->cost)));
             }
-            $purchaseAnalytics = $this->getPurchaseAnalytics();
-
-            // Fetch recent expenses
-            $recentExpenses = Expense::orderBy('date', 'desc')
-                ->limit(5)
-                ->get();
-
-
-            $data = compact(
-                'totalClientDebt',
-                'reports',
-                'currency',
-                'totalSupplierDebt',
-                'hourly_orders',
-                'quantityData',
-                'revenueData',
-                'salesByDay',
-                'salesByWeek',
-                'salesByMonth',
-                'cash_flow_dates',
-                'cash_flow_diff',
-                'products',
-                'todays_orders',
-                'todays_orders_count',
-                'todays_sales',
-                'todays_profit',
-                'recentExpenses'
-            );
-
-
-            $data = array_merge($data, $purchaseAnalytics);
-
-            return view('analytics.index', $data);
-        } else {
-            // Business statistics
-            $totalBusinesses = Business::count();
-            $newBusinessesThisMonth = Business::whereMonth('created_at', now()->month)
-                ->whereYear('created_at', now()->year)
-                ->count();
-
-            // Subscription statistics
-            $activeSubscriptions = Subscription::where('is_active', true)
-                ->count();
-            $trialSubscriptions = Subscription::where('is_active', true)
-                ->where('type', 'free trial')
-                ->count();
-            $expiringSubscriptions = Subscription::where('is_active', true)
-                ->where('ends_at', '<=', now()->addDays(7))
-                ->where('ends_at', '>=', now())
-                ->count();
-
-            // Calculate renewal and conversion rates
-            $expiredLastMonth = Subscription::where('ends_at', '>=', now()->subDays(30)->startOfDay())
-                ->where('ends_at', '<=', now()->subDay()->endOfDay())
-                ->count();
-            $renewedLastMonth = Subscription::where('starts_at', '>=', now()->subDays(30)->startOfDay())
-                ->where('starts_at', '<=', now()->subDay()->endOfDay())
-                ->where('type', '!=', 'free trial')
-                ->count();
-            $subscriptionRenewalRate = $expiredLastMonth > 0 ? round(($renewedLastMonth / $expiredLastMonth) * 100) : 0;
-
-            // Trial conversion metrics
-            $trialStarted = Subscription::where('type', 'free trial')
-                ->where('starts_at', '>=', now()->subDays(90)->startOfDay())
-                ->count();
-            $trialActive = Subscription::where('type', 'free trial')
-                ->where('is_active', true)
-                ->count();
-            $trialConverted = Subscription::where('starts_at', '>=', now()->subDays(90)->startOfDay())
-                ->whereHas('user', function ($query) {
-                    $query->whereHas('subscription', function ($q) {
-                        $q->where('type', '!=', 'free trial');
-                    });
-                })
-                ->count();
-            $conversionRate = $trialStarted > 0 ? round(($trialConverted / $trialStarted) * 100) : 0;
-            $trialConversionRate = $trialStarted > 0 ? round(($trialConverted / $trialStarted) * 100) : 0;
-
-            // Get latest businesses
-            $latestBusinesses = Business::with(['subscription' => function ($query) {
-                $query->where('is_active', true);
-            }])
-                ->latest()
-                ->take(5)
-                ->get();
-
-            // Get recent subscription activities
-            $recentSubscriptions = Subscription::with('user.business')
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get();
-
-            // Prepare chart data for subscription trends (last 12 months)
-            $subscriptionTrendLabels = [];
-            $newSubscriptionsData = [];
-            $expiredSubscriptionsData = [];
-
-            for ($i = 11; $i >= 0; $i--) {
-                $month = now()->subMonths($i);
-                $subscriptionTrendLabels[] = $month->format('M Y');
-
-                $newSubscriptionsData[] = Subscription::whereMonth('starts_at', $month->month)
-                    ->whereYear('starts_at', $month->year)
-                    ->count();
-
-                $expiredSubscriptionsData[] = Subscription::whereMonth('ends_at', $month->month)
-                    ->whereYear('ends_at', $month->year)
-                    ->count();
-            }
-
-            // Subscription plans distribution
-            $subscriptionPlanLabels = ['Startup', 'Store', 'Corporate'];
-            $subscriptionPlanData = [
-                Subscription::where('is_active', true)->where('plan', 'startup')->count(),
-                Subscription::where('is_active', true)->where('plan', 'store')->count(),
-                Subscription::where('is_active', true)->where('plan', 'corporate')->count(),
-            ];
-
-            // Monthly revenue data (last 12 months)
-            $revenueLabels = [];
-            $revenueData = [];
-
-            $prices = [
-                'startup' => 10,
-                'store' => 25,
-                'corporate' => 50,
-            ];
-
-            for ($i = 11; $i >= 0; $i--) {
-                $month = now()->subMonths($i);
-                $startOfMonth = $month->copy()->startOfMonth();
-                $endOfMonth = $month->copy()->endOfMonth();
-
-                $revenueLabels[] = $month->format('M Y');
-
-                $subscriptions = DB::table('subscriptions')
-                    ->select('plan', DB::raw('COUNT(*) as count'))
-                    ->where('is_active', true)
-                    ->whereBetween('starts_at', [$startOfMonth, $endOfMonth])
-                    ->groupBy('plan')
-                    ->pluck('count', 'plan');
-
-                $monthlyRevenue = 0;
-
-                foreach ($subscriptions as $plan => $count) {
-                    $monthlyRevenue += ($prices[$plan] ?? 0) * $count;
-                }
-
-                $revenueData[] = $monthlyRevenue;
-            }
-
-            return view('analytics.super-admin', compact(
-                'totalBusinesses',
-                'newBusinessesThisMonth',
-                'activeSubscriptions',
-                'trialSubscriptions',
-                'expiringSubscriptions',
-                'subscriptionRenewalRate',
-                'trialConversionRate',
-                'latestBusinesses',
-                'recentSubscriptions',
-                'subscriptionTrendLabels',
-                'newSubscriptionsData',
-                'expiredSubscriptionsData',
-                'subscriptionPlanLabels',
-                'subscriptionPlanData',
-                'revenueLabels',
-                'revenueData',
-                'trialStarted',
-                'trialActive',
-                'trialConverted',
-                'conversionRate'
-            ));
         }
+        $purchaseAnalytics = $this->getPurchaseAnalytics();
+
+        // Fetch recent expenses
+        $recentExpenses = Expense::orderBy('date', 'desc')
+            ->limit(5)
+            ->get();
+
+
+        $data = compact(
+            'totalClientDebt',
+            'reports',
+            'currency',
+            'totalSupplierDebt',
+            'hourly_orders',
+            'quantityData',
+            'revenueData',
+            'salesByDay',
+            'salesByWeek',
+            'salesByMonth',
+            'cash_flow_dates',
+            'cash_flow_diff',
+            'products',
+            'todays_orders',
+            'todays_orders_count',
+            'todays_sales',
+            'todays_profit',
+            'recentExpenses'
+        );
+
+        $data = array_merge($data, $purchaseAnalytics);
+
+        return view('analytics.index', $data);
     }
 
     public function getHourlyOrders(Request $request)

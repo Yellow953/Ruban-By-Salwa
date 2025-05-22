@@ -2,36 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\BusinessScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = [];
-
-    // Scope
-    protected static function booted()
-    {
-        static::addGlobalScope(new BusinessScope);
-
-        static::creating(function ($model) {
-            $model->business_id = auth()->user()->business_id;
-        });
-    }
 
     // Profit
     public function get_profit()
     {
         return $this->price - $this->cost;
-    }
-
-    public function business()
-    {
-        return $this->belongsTo(Business::class);
     }
 
     public function category()

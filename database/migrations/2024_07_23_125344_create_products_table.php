@@ -17,12 +17,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->default('assets/images/default.png');
             $table->bigInteger("category_id")->unsigned();
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 

@@ -2,32 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\BusinessScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $guarded = [];
-
-    // Scope
-    protected static function booted()
-    {
-        static::addGlobalScope(new BusinessScope);
-
-        static::creating(function ($model) {
-            $model->business_id = auth()->user()->business_id;
-        });
-    }
-
-    public function business()
-    {
-        return $this->belongsTo(Business::class);
-    }
 
     public function currency()
     {
@@ -37,6 +20,11 @@ class Report extends Model
     public function get_profit()
     {
         return ($this->start_cash && $this->end_cash ? ($this->end_cash - $this->start_cash) * $this->currency->rate : 'N/A');
+    }
+
+    public function can_delete()
+    {
+        return auth()->user()->role == 'admin';
     }
 
     // Filter
@@ -49,10 +37,5 @@ class Report extends Model
         }
 
         return $q;
-    }
-
-    public function can_delete()
-    {
-        return auth()->user()->role == 'admin';
     }
 }

@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
@@ -19,10 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'phone',
         'currency_id',
-        'business_id',
         'image',
-        'terms_agreed',
-        'terms_agreed_at',
     ];
 
     protected $hidden = [
@@ -38,11 +33,6 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function business()
-    {
-        return $this->belongsTo(Business::class);
-    }
-
     public function currency()
     {
         return $this->belongsTo(Currency::class);
@@ -53,28 +43,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Order::class, 'cashier_id');
     }
 
-    public function subscription()
-    {
-        return $this->hasOne(Subscription::class);
-    }
-
-    public function hasActiveSubscription()
-    {
-        $subscription = $this->subscription;
-
-        return $subscription && $subscription->is_active && (!$subscription->ends_at || now()->between($subscription->starts_at, $subscription->ends_at));
-    }
-
-    public function isOnTrial()
-    {
-        $subscription = $this->subscription;
-
-        return $subscription && $subscription->isTrialActive();
-    }
-
     public function can_delete()
     {
-        return $this->orders->count() == 0 && (auth()->user()->role == 'admin' || auth()->user()->role == 'super admin');
+        return $this->orders->count() == 0 && auth()->user()->role == 'admin';
     }
 
     // Filter
@@ -95,10 +66,6 @@ class User extends Authenticatable implements MustVerifyEmail
         if (request('role')) {
             $role = request('role');
             $q->where('role', $role);
-        }
-        if (request('business_id')) {
-            $business_id = request('business_id');
-            $q->where('business_id', $business_id);
         }
         if (request('currency_id')) {
             $currency_id = request('currency_id');

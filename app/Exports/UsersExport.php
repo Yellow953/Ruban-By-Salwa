@@ -18,7 +18,7 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        return User::select('name', 'email', 'phone', 'role', 'business_id', 'currency_id', 'created_at')->filter()->get();
+        return User::select('name', 'email', 'phone', 'role', 'currency_id', 'created_at')->filter()->get();
     }
 
     public function headings(): array
@@ -28,7 +28,6 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping
             'Email',
             'Phone',
             'Role',
-            'Business',
             'Currency',
             'Created At',
         ];
@@ -41,7 +40,6 @@ class UsersExport implements FromCollection, WithHeadings, WithMapping
             $row->email,
             $row->phone,
             $row->role,
-            $row->business->name,
             $row->currency->code,
             $row->created_at,
         ];

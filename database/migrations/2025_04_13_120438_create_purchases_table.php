@@ -17,11 +17,8 @@ return new class extends Migration
             $table->double('total')->default(0);
             $table->string('invoice_number')->nullable();
             $table->text('notes')->nullable();
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
 
-            $table->foreign('business_id')->references('id')->on('businesses');
             $table->foreign('supplier_id')->references('id')->on('suppliers');
             $table->foreign('currency_id')->references('id')->on('currencies');
         });

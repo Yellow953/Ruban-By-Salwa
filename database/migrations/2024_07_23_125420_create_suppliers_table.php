@@ -14,11 +14,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->bigInteger("business_id")->unsigned();
             $table->timestamps();
-            $table->softDeletes();
-
-            $table->foreign('business_id')->references('id')->on('businesses');
         });
     }
 
