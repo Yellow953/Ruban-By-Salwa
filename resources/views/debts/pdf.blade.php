@@ -40,8 +40,6 @@
     <table>
         <thead>
             <tr>
-                <th>Type</th>
-                <th>Supplier</th>
                 <th>Client</th>
                 <th>Amount</th>
                 <th>Currency</th>
@@ -53,8 +51,6 @@
         <tbody>
             @foreach($debts as $debt)
             <tr>
-                <td>{{ $debt->type }}</td>
-                <td>{{ $debt->supplier->name ?? '-' }}</td>
                 <td>{{ $debt->client->name ?? '-' }}</td>
                 <td>{{ $debt->amount }}</td>
                 <td>{{ $debt->currency->code }}</td>

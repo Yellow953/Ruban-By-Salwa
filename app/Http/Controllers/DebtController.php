@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DebtsExport;
-use App\Helpers\Helper;
 use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Debt;
 use App\Models\Log;
-use App\Models\Supplier;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,66 +20,47 @@ class DebtController extends Controller
 
     public function index()
     {
-        $debts = Debt::select('id', 'currency_id', 'client_id', 'supplier_id', 'amount', 'date', 'type')->filter()->orderBy('id', 'desc')->paginate(25);
+        $debts = Debt::select('id', 'currency_id', 'client_id', 'amount', 'date')->filter()->orderBy('id', 'desc')->paginate(25);
         $clients = Client::select('id', 'name')->get();
-        $suppliers = Supplier::select('id', 'name')->get();
-        $types = Helper::get_debt_types();
 
-        $data = compact('debts', 'suppliers', 'clients', 'types');
+        $data = compact('debts', 'clients');
         return view('debts.index', $data);
     }
 
     public function new()
     {
-        $suppliers = Supplier::select('id', 'name')->get();
         $clients = Client::select('id', 'name')->get();
         $currencies = Currency::select('id', 'code')->get();
-        $types = Helper::get_debt_types();
 
-        $data = compact('suppliers', 'clients', 'currencies', 'types');
+        $data = compact('clients', 'currencies');
         return view('debts.new', $data);
     }
 
     public function create(Request $request)
     {
         $request->validate([
-            'type' => 'required',
+            'client_id' => 'required',
             'currency_id' => 'required',
             'date' => 'required|date',
             'amount' => 'required|min:0|numeric',
         ]);
 
-        if ($request->supplier_id) {
-            $debt = Debt::create($request->all());
+        $debt = Debt::create($request->all());
 
-            $text = "Debt for Debt: " . ucwords($debt->supplier->name) . " of " . $debt->amount . " in " . now();
+        $text = "Debt for Client: " . ucwords($debt->client->name) . " of " . $debt->amount . " in " . now();
 
-            Log::create([
-                'text' => $text,
-            ]);
+        Log::create([
+            'text' => $text,
+        ]);
 
-            return redirect()->route('debts')->with('success', 'Debt successfully created...');
-        } else if ($request->client_id) {
-            $debt = Debt::create($request->all());
-
-            $text = "Debt for Client: " . ucwords($debt->client->name) . " of " . $debt->amount . " in " . now();
-
-            Log::create([
-                'text' => $text,
-            ]);
-
-            return redirect()->route('debts')->with('success', 'Debt successfully created...');
-        } else {
-            return redirect()->back()->with('danger', 'Please select supplier or client...');
-        }
+        return redirect()->route('debts')->with('success', 'Debt successfully created...');
     }
 
     public function edit(Debt $debt)
     {
         $currencies = Currency::select('id', 'code')->get();
-        $types = Helper::get_debt_types();
 
-        $data = compact('debt', 'currencies', 'types');
+        $data = compact('debt', 'currencies');
         return view('debts.edit', $data);
     }
 
@@ -128,7 +107,7 @@ class DebtController extends Controller
 
     public function pdf(Request $request)
     {
-        $debts = Debt::with('currency', 'supplier', 'client')->filter()->get();
+        $debts = Debt::with('currency', 'client')->filter()->get();
 
         $pdf = Pdf::loadView('debts.pdf', compact('debts'));
 
@@ -145,7 +124,6 @@ class DebtController extends Controller
         ]);
 
         $debt = Debt::create([
-            'type' => 'client',
             'client_id' => $request->client_id,
             'amount' => $request->amount,
             'currency_id' => $request->currency_id,

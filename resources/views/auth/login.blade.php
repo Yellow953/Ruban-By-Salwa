@@ -1,70 +1,81 @@
 @extends('auth.app')
 
-@section('title', 'login')
-
 @section('content')
 <!--begin::Form-->
 <form class="form w-100" id="kt_sign_in_form" method="POST" action="{{ route('login') }}">
     @csrf
+
+    {{--
+    <!--begin::Logo-->
+    <a href="{{ route('home') }}" class="d-flex flex-center">
+        <img alt="Logo" src="{{ asset('assets/images/logo.png') }}" class="login-logo" width="150" height="125" />
+    </a>
+    <!--end::Logo--> --}}
+
     <!--begin::Heading-->
     <div class="text-center mb-11">
         <!--begin::Title-->
-        <h1 class="text-dark fw-bolder mb-3">Sign In</h1>
+        <h1 class="text-white fw-bolder my-4 display-6 orange-color">Sign In</h1>
         <!--end::Title-->
     </div>
-
+    <!--begin::Heading-->
     <!--begin::Input group=-->
     <div class="fv-row mb-8">
         <!--begin::Email-->
-        <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent"
-            required autofocus value="{{ old('email') }}" />
+        <input type="text" placeholder="Email" name="email" autocomplete="off"
+            class="form-control bg-transparent text-white @error('email') is-invalid @enderror" id="email"
+            value="{{ old('email') }}" required autocomplete="email" autofocus />
+
+        @error('email')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
         <!--end::Email-->
     </div>
     <!--end::Input group=-->
     <div class="fv-row mb-3">
         <!--begin::Password-->
-        <input type="password" placeholder="Password" name="password" autocomplete="off"
-            class="form-control bg-transparent" required />
+        <input id="password" type="password" placeholder="Password" name="password" autocomplete="current-password"
+            required class="form-control bg-transparent text-white @error('password') is-invalid @enderror" />
+
+        @error('password')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+        @enderror
         <!--end::Password-->
     </div>
     <!--end::Input group=-->
-    <!--begin::Wrapper-->
-    <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-        <label>
-            <input type="checkbox" name="remember"> Remember Me
-        </label>
-        <div></div>
 
-        <!--begin::Link-->
-        <a href="{{ route('password.request') }}" class="link-yellow">Forgot Password ?</a>
-        <!--end::Link-->
+    <div class="d-flex justify-content-between px-3 mt-5">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked'
+                : '' }}>
+            <label class="form-check-label" for="remember">
+                {{ __('Remember Me') }}
+            </label>
+        </div>
+
+        <!--begin::Wrapper-->
+        <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+            <!--begin::Link-->
+            <a href="{{ route('password.request') }}" class="link-primary orange-color">Forgot
+                Password ?</a>
+            <!--end::Link-->
+        </div>
+        <!--end::Wrapper-->
     </div>
-    <!--end::Wrapper-->
+
     <!--begin::Submit button-->
-    <div class="d-grid mb-10">
-        <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+    <div class="d-grid mb-5">
+        <button type="submit" id="kt_sign_in_submit" class="btn error-btn indicator-label-custom">
             <!--begin::Indicator label-->
-            <span class="indicator-label">Sign In</span>
+            <span class="indicator-label text-white">Sign In</span>
             <!--end::Indicator label-->
-            <!--begin::Indicator progress-->
-            <span class="indicator-progress">Please wait...
-                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-            </span>
-            <!--end::Indicator progress-->
         </button>
     </div>
     <!--end::Submit button-->
-    <!--begin::Sign up-->
-    <div class="text-gray-500 text-center fw-semibold fs-6">Not a Member yet?
-        <a href="{{ route('register') }}" class="link-yellow">Sign up</a>
-    </div>
-    <!--end::Sign up-->
 </form>
 <!--end::Form-->
-@endsection
-
-@section('scripts')
-<!--begin::Custom Javascript(used for this page only)-->
-<script src="{{ asset('assets/js/custom/authentication/sign-in/general.js') }}"></script>
-<!--end::Custom Javascript-->
 @endsection

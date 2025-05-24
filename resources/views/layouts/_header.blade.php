@@ -29,7 +29,7 @@ $currencies = Helper::get_currencies();
         <!--begin::Mobile logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
             <a href="{{ route('dashboard') }}" class="d-lg-none">
-                <img alt="Logo" src="{{ asset('assets/images/yellowpos_black_transparent_bg.png') }}" class="h-30px" />
+                <img alt="Logo" src="{{ asset('assets/images/logo.png') }}" class="h-30px" />
             </a>
         </div>
         <!--end::Mobile logo-->
@@ -352,14 +352,6 @@ $currencies = Helper::get_currencies();
                             <a href="{{ route('profile') }}" class="menu-link px-5">My Profile</a>
                         </div>
                         <!--end::Menu item-->
-
-                        @if ($business->menu_activated)
-                        <!--begin::Menu item-->
-                        <div class="menu-item px-5">
-                            <a href="{{ route('menu', $business->name) }}" class="menu-link px-5">My Menu</a>
-                        </div>
-                        <!--end::Menu item-->
-                        @endif
 
                         @if($user->role == 'admin')
                         <!--begin::Menu item-->

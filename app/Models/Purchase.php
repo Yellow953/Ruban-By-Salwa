@@ -8,11 +8,6 @@ class Purchase extends Model
 {
     protected $guarded = [];
 
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
-    }
-
     public function currency()
     {
         return $this->belongsTo(Currency::class);
@@ -54,10 +49,6 @@ class Purchase extends Model
         if (request('purchase_date')) {
             $purchase_date = request('purchase_date');
             $q->whereDate('purchase_date', $purchase_date);
-        }
-        if (request('supplier_id')) {
-            $supplier_id = request('supplier_id');
-            $q->where('supplier_id', $supplier_id);
         }
         if (request('notes')) {
             $notes = request('notes');

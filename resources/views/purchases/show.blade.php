@@ -3,14 +3,14 @@
 <!--begin::Head-->
 
 <head>
-    <title>YellowPOS | Purchase #{{ $purchase->number }}</title>
+    <title>Ruban By Salwa | Purchase #{{ $purchase->number }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="shortcut icon" href="{{ asset('assets/images/yellowpos_favicon.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
 
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
@@ -119,26 +119,6 @@
                                             <div class="flex-root d-flex flex-column mt-4">
                                                 <span class="text-muted">Purchase Date</span>
                                                 <span class="fs-5">{{ $purchase->purchase_date }}</span>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <h4 class="pe-5 pb-7">Supplier</h4>
-                                            <div class="flex-root d-flex flex-column mt-4">
-                                                <span class="text-muted">Name</span>
-                                                <span class="fs-5">{{ ucwords($purchase->supplier->name) }}</span>
-                                            </div>
-                                            <div class="flex-root d-flex flex-column mt-4">
-                                                <span class="text-muted">Email</span>
-                                                <span class="fs-5">{{ $purchase->supplier->email }}</span>
-                                            </div>
-                                            <div class="flex-root d-flex flex-column mt-4">
-                                                <span class="text-muted">Phone</span>
-                                                <span class="fs-5">{{ $purchase->supplier->phone }}</span>
-                                            </div>
-                                            <div class="flex-root d-flex flex-column mt-4">
-                                                <span class="text-muted">Adddress</span>
-                                                <span class="fs-5">{{ $purchase->supplier->address }}</span>
                                             </div>
                                         </div>
 

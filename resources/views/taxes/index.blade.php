@@ -77,8 +77,7 @@
                         <tr class="text-center">
                             <th class="col-4 p-3">Tax</th>
                             <th class="col-4 p-3">Rate</th>
-                            <th class="col-2 p-3">Businesses</th>
-                            <th class="col-2 p-3">Actions</th>
+                            <th class="col-4 p-3">Actions</th>
                         </tr>
                     </thead>
                     <!--end::Table head-->
@@ -96,9 +95,6 @@
                                     {{ number_format($tax->rate, 2) }}
                                 </div>
                             </td>
-                            <td class="text-center">
-                                {{ $tax->businesses->count() }}
-                            </td>
                             <td class="d-flex justify-content-end">
                                 <a href="{{ route('taxes.edit', $tax->id) }}"
                                     class="btn btn-icon btn-warning btn-sm me-1">
@@ -115,7 +111,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <th colspan="4">
+                            <th colspan="3">
                                 <div class="text-center">No Taxes Yet ...</div>
                             </th>
                         </tr>
@@ -125,7 +121,7 @@
 
                     <tfoot>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="3">
                                 {{ $taxes->appends(request()->query())->links() }}
                             </th>
                         </tr>

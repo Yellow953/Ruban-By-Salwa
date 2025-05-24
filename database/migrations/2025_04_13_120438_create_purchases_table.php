@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->integer('number')->unsigned();
-            $table->bigInteger("supplier_id")->unsigned();
             $table->bigInteger("currency_id")->unsigned();
             $table->date('purchase_date');
             $table->double('total')->default(0);
@@ -19,7 +18,6 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
 
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
             $table->foreign('currency_id')->references('id')->on('currencies');
         });
     }

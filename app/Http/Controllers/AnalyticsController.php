@@ -23,21 +23,6 @@ class AnalyticsController extends Controller
 
     public function index()
     {
-        // Fetch total debts for suppliers and clients
-        $clientData = Debt::whereNotNull('client_id')->get();
-        $totalClientDebt = 0;
-
-        foreach ($clientData as $cd) {
-            $totalClientDebt += ($cd->amount / $cd->currency->rate);
-        }
-
-        $supplierData = Debt::whereNotNull('supplier_id')->get();
-        $totalSupplierDebt = 0;
-
-        foreach ($supplierData as $cd) {
-            $totalSupplierDebt += ($cd->amount / $cd->currency->rate);
-        }
-
         $currency = auth()->user()->currency;
 
         // Fetch top products by quantity sold
@@ -132,10 +117,8 @@ class AnalyticsController extends Controller
 
 
         $data = compact(
-            'totalClientDebt',
             'reports',
             'currency',
-            'totalSupplierDebt',
             'hourly_orders',
             'quantityData',
             'revenueData',
@@ -479,20 +462,12 @@ class AnalyticsController extends Controller
         $purchaseDates = $purchaseTrend->pluck('date')->toArray();
         $purchaseAmounts = $purchaseTrend->pluck('daily_total')->toArray();
 
-        // Supplier with most purchases
-        $topSupplier = Purchase::select('supplier_id', DB::raw('COUNT(*) as purchase_count'), DB::raw('SUM(total) as total_amount'))
-            ->with('supplier:id,name')
-            ->groupBy('supplier_id')
-            ->orderBy('total_amount', 'desc')
-            ->first();
-
         return [
             'recentPurchases' => $recentPurchases,
             'totalPurchasesValue' => $totalPurchasesValue,
             'topPurchasedProducts' => $topPurchasedProducts,
             'purchaseDates' => $purchaseDates,
             'purchaseAmounts' => $purchaseAmounts,
-            'topSupplier' => $topSupplier,
         ];
     }
 

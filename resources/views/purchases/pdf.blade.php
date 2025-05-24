@@ -41,7 +41,6 @@
         <thead>
             <tr>
                 <th>NO</th>
-                <th>Supplier</th>
                 <th>Purchase Date</th>
                 <th>Total</th>
                 <th>Invoice Number</th>
@@ -53,7 +52,6 @@
             @foreach($purchases as $purchase)
             <tr>
                 <td>{{ $purchase->number }}</td>
-                <td>{{ $purchase->supplier->name }}</td>
                 <td>{{ $purchase->purchase_date }}</td>
                 <td>{{ $purchase->total }}</td>
                 <td>{{ $purchase->invoice_number }}</td>

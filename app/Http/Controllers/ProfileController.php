@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Helper;
 use App\Models\Business;
 use App\Models\Category;
-use App\Models\Currency;
+use App\Models\Client;
 use App\Models\Log;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\Report;
 use App\Models\Tax;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 
@@ -91,10 +93,10 @@ class ProfileController extends Controller
         $user = auth()->user();
 
         Log::create([
-            'text' => ucwords($user->name) . ' deactivated his account, datetime: ' . now(),
+            'text' => ucwords($user->name) . ' deactivated and deleted his account, datetime: ' . now(),
         ]);
 
-        $user->subscription->delete();
+        $user->delete();
 
         return redirect()->route('custom_logout');
     }
@@ -102,9 +104,15 @@ class ProfileController extends Controller
     public function business()
     {
         $business = Business::firstOrFail();
+        $users = User::select('name', 'role')->get();
         $taxes = Tax::select('id', 'name')->get();
+        $categories_count = Category::count();
+        $products_count = Product::count();
+        $orders_count = Order::count();
+        $reports_count = Report::count();
+        $clients_count = Client::count();
 
-        $data = compact('business', 'taxes');
+        $data = compact('business', 'taxes', 'categories_count', 'products_count', 'orders_count', 'reports_count', 'clients_count', 'users');
         return view('profile.business', $data);
     }
 

@@ -28,12 +28,13 @@
             <div class="d-flex align-items-center">
                 <!--begin::Input group-->
                 <div class="position-relative w-md-400px me-md-2">
-                    <select name="type" class="form-select ps-10" data-control="select2"
+                    <select name="client_id" class="form-select" data-control="select2"
                         data-placeholder="Select an option">
                         <option value=""></option>
-                        @foreach ($types as $type)
-                        <option value="{{ $type }}" {{ request()->query('type')==$type ? 'selected' : '' }}>{{
-                            ucwords($type) }}</option>
+                        @foreach ($clients as $client)
+                        <option value="{{ $client->id }}" {{ request()->query('client_id')==$client->id ?
+                            'selected' :
+                            '' }}>{{ ucwords($client->name) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -57,34 +58,6 @@
                 <!--end::Separator-->
                 <!--begin::Row-->
                 <div class="row g-8 mb-8">
-                    <!--begin::Col-->
-                    <div class="col-md-6">
-                        <label class="fs-6 form-label fw-bold text-dark">Client</label>
-                        <select name="client_id" class="form-select" data-control="select2"
-                            data-placeholder="Select an option">
-                            <option value=""></option>
-                            @foreach ($clients as $client)
-                            <option value="{{ $client->id }}" {{ request()->query('client_id')==$client->id ?
-                                'selected' :
-                                '' }}>{{ ucwords($client->name) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <!--end::Col-->
-                    <!--begin::Col-->
-                    <div class="col-md-6">
-                        <label class="fs-6 form-label fw-bold text-dark">Supplier</label>
-                        <select name="supplier_id" class="form-select" data-control="select2"
-                            data-placeholder="Select an option">
-                            <option value=""></option>
-                            @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}" {{ request()->query('supplier_id')==$supplier->id ?
-                                'selected' :
-                                '' }}>{{ ucwords($supplier->name) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <!--end::Col-->
                     <!--begin::Col-->
                     <div class="col-md-6">
                         <label class="fs-6 form-label fw-bold text-dark">Date From</label>
@@ -132,7 +105,7 @@
                     <!--begin::Table head-->
                     <thead>
                         <tr class="text-center">
-                            <th class="col-3 p-3">Creditor</th>
+                            <th class="col-3 p-3">Client</th>
                             <th class="col-3 p-3">Date</th>
                             <th class="col-2 p-3">Amount</th>
                             <th class="col-2 p-3">Actions</th>
@@ -145,9 +118,8 @@
                         <tr>
 
                             <td>
-                                <span class="text-gray-800 fw-bold d-block fs-7">{{ ucwords($debt->client_id ?
-                                    $debt->client->name :
-                                    $debt->supplier->name) }}</span>
+                                <span class="text-gray-800 fw-bold d-block fs-7">{{ ucwords($debt->client->name)
+                                    }}</span>
                             </td>
                             <td class="text-center">
                                 {{ ucwords($debt->date) }}

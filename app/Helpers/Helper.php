@@ -18,12 +18,6 @@ class Helper
         return $roles;
     }
 
-    public static function get_debt_types()
-    {
-        $types = ['client', 'supplier'];
-        return $types;
-    }
-
     public static function get_route_names()
     {
         return SearchRoute::pluck('name')->toArray();

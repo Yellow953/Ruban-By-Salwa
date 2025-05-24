@@ -18,7 +18,6 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\TaxController;
-use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -90,11 +89,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/custom-report', [AnalyticsController::class, 'customReport'])->name('analytics.custom-report');
             Route::get('/hourly-orders', [AnalyticsController::class, 'getHourlyOrders'])->name('analytics.hourly-orders');
             Route::get('/sales-vs-purchases', [AnalyticsController::class, 'getSalesVsPurchases']);
-            Route::get('/businesses', [AnalyticsController::class, 'businessAnalytics'])->name('analytics.businesses');
-            Route::get('/subscriptions', [AnalyticsController::class, 'subscriptionAnalytics'])->name('analytics.subscriptions');
-            Route::get('/conversion-rates', [AnalyticsController::class, 'conversionRateAnalytics'])->name('analytics.conversion-rates');
-            Route::get('/export-business-data', [AnalyticsController::class, 'exportBusinessData'])->name('analytics.export-business-data');
-            Route::get('/export-subscription-data', [AnalyticsController::class, 'exportSubscriptionData'])->name('analytics.export-subscription-data');
 
             Route::get('/', [AnalyticsController::class, 'index'])->name('analytics');
         });
@@ -130,18 +124,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/{product}/save', [ProductController::class, 'save'])->name('products.save');
             Route::get('/{product}/destroy', [ProductController::class, 'destroy'])->name('products.destroy');
             Route::get('/', [ProductController::class, 'index'])->name('products');
-        });
-
-        // Suppliers Routes
-        Route::prefix('suppliers')->group(function () {
-            Route::get('/export', [SupplierController::class, 'export'])->name('suppliers.export');
-            Route::get('/pdf', [SupplierController::class, 'pdf'])->name('suppliers.pdf');
-            Route::get('/new', [SupplierController::class, 'new'])->name('suppliers.new');
-            Route::post('/create', [SupplierController::class, 'create'])->name('suppliers.create');
-            Route::get('/{supplier}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
-            Route::post('/{supplier}/update', [SupplierController::class, 'update'])->name('suppliers.update');
-            Route::get('/{supplier}/delete', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
-            Route::get('/', [SupplierController::class, 'index'])->name('suppliers');
         });
 
         // Purchases Routes

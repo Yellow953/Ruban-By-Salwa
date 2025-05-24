@@ -4,7 +4,7 @@
     class PosSystem {
         constructor() {
             // Configuration
-            this.taxRate = {{ auth()->user()->business->tax->rate ?? 0 }};
+            this.taxRate = {{ $business->tax->rate ?? 0 }};
             this.moneyFormat = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: '{{ $currency->code }}',
@@ -959,12 +959,6 @@
                         </div>
                         <br>
                         <div class="text-center">Thank you for your purchase!</div>
-                        @if($business->menu_activated)
-                        <br>
-                        <div class="text-center">{!! QrCode::size(50)->generate(route('menu', $business->name)) !!}</div>
-                        <br>
-                        <div class="text-center">Visit our online menu...</div>
-                        @endif
                     </body>
                 </html>
             `;

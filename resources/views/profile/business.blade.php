@@ -136,7 +136,7 @@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                                 <div class="fs-2 fw-bold" data-kt-countup="true"
-                                                    data-kt-countup-value="{{ $business->categories->count() }}">0</div>
+                                                    data-kt-countup-value="{{ $categories_count }}">0</div>
                                             </div>
                                             <!--end::Number-->
                                             <!--begin::Label-->
@@ -154,7 +154,7 @@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                                 <div class="fs-2 fw-bold" data-kt-countup="true"
-                                                    data-kt-countup-value="{{ $business->products->count() }}">0</div>
+                                                    data-kt-countup-value="{{ $products_count }}">0</div>
                                             </div>
                                             <!--end::Number-->
                                             <!--begin::Label-->
@@ -172,7 +172,7 @@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                                 <div class="fs-2 fw-bold" data-kt-countup="true"
-                                                    data-kt-countup-value="{{ $business->orders->count() }}">0</div>
+                                                    data-kt-countup-value="{{ $orders_count }}">0</div>
                                             </div>
                                             <!--end::Number-->
                                             <!--begin::Label-->
@@ -190,7 +190,7 @@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                                 <div class="fs-2 fw-bold" data-kt-countup="true"
-                                                    data-kt-countup-value="{{ $business->reports->count() }}">0</div>
+                                                    data-kt-countup-value="{{ $reports_count }}">0</div>
                                             </div>
                                             <!--end::Number-->
                                             <!--begin::Label-->
@@ -208,7 +208,7 @@
                                                 </span>
                                                 <!--end::Svg Icon-->
                                                 <div class="fs-2 fw-bold" data-kt-countup="true"
-                                                    data-kt-countup-value="{{ $business->clients->count() }}">0</div>
+                                                    data-kt-countup-value="{{ $clients_count }}">0</div>
                                             </div>
                                             <!--end::Number-->
                                             <!--begin::Label-->
@@ -216,25 +216,6 @@
                                             <!--end::Label-->
                                         </div>
                                         <!--end::Stat-->
-                                        <!--begin::Stat-->
-                                        <div class="border border-gray-300 border-dashed rounded min-w-100px p-2 m-2">
-                                            <!--begin::Number-->
-                                            <div class="d-flex align-items-center">
-                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-                                                <span class="svg-icon svg-icon-3 svg-icon-success me-2">
-                                                    <i class="bi bi-truck"></i>
-                                                </span>
-                                                <!--end::Svg Icon-->
-                                                <div class="fs-2 fw-bold" data-kt-countup="true"
-                                                    data-kt-countup-value="{{ $business->suppliers->count() }}">0</div>
-                                            </div>
-                                            <!--end::Number-->
-                                            <!--begin::Label-->
-                                            <div class="fw-semibold fs-6 text-gray-400">Supplier</div>
-                                            <!--end::Label-->
-                                        </div>
-                                        <!--end::Stat-->
-
                                     </div>
                                     <!--end::Stats-->
                                 </div>
@@ -257,19 +238,11 @@
                         </li>
                         <li class="nav-item mt-2">
                             <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                                href="#kt_tab_pane_3">Operating Hours</a>
+                                href="#kt_tab_pane_3">Users</a>
                         </li>
                         <li class="nav-item mt-2">
                             <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                                href="#kt_tab_pane_4">Menu</a>
-                        </li>
-                        <li class="nav-item mt-2">
-                            <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                                href="#kt_tab_pane_5">Users</a>
-                        </li>
-                        <li class="nav-item mt-2">
-                            <a class="nav-link text-active-primary ms-0 me-10 py-5" data-bs-toggle="tab"
-                                href="#kt_tab_pane_6">Settings</a>
+                                href="#kt_tab_pane_4">Settings</a>
                         </li>
                     </ul>
                     <!--begin::Navs-->
@@ -283,10 +256,6 @@
                         <h4 class="card-title mb-4">Business Overview</h4>
 
                         <div class="user-info">
-                            <div class="user-info-item d-flex justify-content-between align-items-center">
-                                <span class="fw-bold">Type:</span>
-                                <span>{{ $business->type }}</span>
-                            </div>
                             <div class="user-info-item d-flex justify-content-between align-items-center">
                                 <span class="fw-bold">Name:</span>
                                 <span>{{ $business->name }}</span>
@@ -357,21 +326,6 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Website</label>
-                                        <input type="text" class="form-control" name="website"
-                                            value="{{ $business->website }}" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Google Maps</label>
-                                        <input type="text" class="form-control" name="google_maps_link"
-                                            placeholder="Enter Google Maps Link..."
-                                            value="{{ $business->google_maps_link }}" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
                                         <label class="required form-label">Address</label>
                                         <input type="text" class="form-control" name="address"
                                             value="{{ $business->address }}" required />
@@ -420,180 +374,22 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
-                    <div class="card user-info-card p-8">
-                        <h4 class="card-title mb-4">Operating Hours</h4>
-                        <form action="{{ route('business.operating_hours.update') }}" method="POST"
-                            enctype="multipart/form-data" class="form">
-                            @csrf
-
-                            <div class="row my-4">
-                                <div class="col-3 text-center fw-bold fs-5">Day</div>
-                                <div class="col-3 text-center fw-bold fs-5">Open</div>
-                                <div class="col-3 text-center fw-bold fs-5">Opening Hour</div>
-                                <div class="col-3 text-center fw-bold fs-5">Closing Hour</div>
-                            </div>
-
-                            @foreach ($operating_hours as $operating_hour)
-                            <div class="row my-2">
-                                <div class="col-3 text-center my-auto">
-                                    <input type="hidden" name="day[]" value="{{ $operating_hour->day }}">
-                                    <span>{{ $operating_hour->day }}</span>
-                                </div>
-                                <div class="col-3 my-auto">
-                                    <select name="open[]" class="form-select" data-control="select2" required>
-                                        <option value="true" {{ $operating_hour->open ? 'selected' : '' }}>Open</option>
-                                        <option value="false" {{ !$operating_hour->open ? 'selected' : '' }}>Closed
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-3 my-auto">
-                                    <select name="opening_hour[]" class="form-select" data-placeholder="Closed"
-                                        data-control="select2">
-                                        <option value=""></option>
-                                        @foreach ($hours as $hour)
-                                        <option value="{{ $hour }}" {{ $hour==$operating_hour->opening_hour ? 'selected'
-                                            : ''
-                                            }}>
-                                            {{ $hour }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-3 my-auto">
-                                    <select name="closing_hour[]" class="form-select" data-placeholder="Closed"
-                                        data-control="select2">
-                                        <option value=""></option>
-                                        @foreach ($hours as $hour)
-                                        <option value="{{ $hour }}" {{ $hour==$operating_hour->closing_hour ? 'selected'
-                                            : ''
-                                            }}>
-                                            {{ $hour }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            @endforeach
-
-                            <div class="row mt-4">
-                                <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary">Update Operating Hours</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
-                    <div class="row gap-5">
-                        <div class="col-md-3">
-                            <div class="card user-info-card p-8 mb-4">
-                                <form action="{{ route('business.menu.toggle') }}" method="get"
-                                    enctype="multipart/form-data" class="mb-3">
-                                    @csrf
-
-                                    <div class="form-group">
-                                        <h3>Menu</h3>
-                                        <button type="submit"
-                                            class="btn btn-lg btn-secondary btn-toggle {{ $business->menu_activated ? 'active' : '' }}"
-                                            data-toggle="button" aria-pressed="false" autocomplete="off">
-                                            <div class="handle"></div>
-                                        </button>
-                                    </div>
-                                </form>
-
-                                <form action="{{ route('business.orders.toggle') }}" method="get"
-                                    enctype="multipart/form-data" class="mb-3">
-                                    @csrf
-
-                                    <div class="form-group">
-                                        <h3>Menu Orders</h3>
-                                        <button type="submit"
-                                            class="btn btn-lg btn-secondary btn-toggle {{ $business->ordering_activated ? 'active' : '' }}"
-                                            data-toggle="button" aria-pressed="false" autocomplete="off">
-                                            <div class="handle"></div>
-                                        </button>
-                                    </div>
-                                </form>
-
-                                <form action="{{ route('business.delivery.toggle') }}" method="get"
-                                    enctype="multipart/form-data" class="mb-3">
-                                    @csrf
-
-                                    <div class="form-group">
-                                        <h3>Delivery</h3>
-                                        <button type="submit"
-                                            class="btn btn-lg btn-secondary btn-toggle {{ $business->delivery_activated ? 'active' : '' }}"
-                                            data-toggle="button" aria-pressed="false" autocomplete="off">
-                                            <div class="handle"></div>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="card user-info-card p-8">
-                                <form action="{{ route('business.delivery.update') }}" method="POST"
-                                    enctype="multipart/form-data" class="mb-3">
-                                    @csrf
-
-                                    <label for="delivery" class="form-label mb-4">Delivery Fee</label>
-
-                                    <div class="row px-4">
-                                        <div class="col p-0">
-                                            <input type="number" name="delivery" value="{{ $business->delivery }}"
-                                                min="0" step="any" class="form-control" required>
-                                        </div>
-                                        <div class="col p-0">
-                                            <button type="submit" class="btn btn-primary mx-2">Update</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="card col-md-4 user-info-card p-8 mb-auto">
-                            <div class="d-flex justify-content-center align-content-center mb-4">
-                                {!! QrCode::size(200)->generate(route('menu', $business->name)) !!}
-                            </div>
-                            <a href="{{ route('qrcode.download', $business->id) }}"
-                                class="btn btn-primary mt-5">Download QR
-                                Code</a>
-                        </div>
-                        <div class="card col-md-4 user-info-card p-8 mb-auto">
-                            <div class="d-flex justify-content-center align-content-center">
-                                <img src="{{ asset($business->banner ?? 'assets/images/menu/menu-hero.jpg') }}"
-                                    class="img-fluid rounded ">
-                            </div>
-
-                            <form action="{{ route('business.banner_upload') }}" method="post" class="mt-4"
-                                enctype="multipart/form-data">
-                                @csrf
-
-                                <div class="form-group">
-                                    <label class="required form-label">Banner</label>
-                                    <input type="file" class="form-control" name="banner" required />
-                                </div>
-
-                                <button type="submit" class="btn btn-primary w-100">Update Banner</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="kt_tab_pane_5" role="tabpanel">
                     <div class="card col-md-4 user-info-card p-8">
                         <h4 class="card-title mb-4">Users</h4>
                         <p class="card-text text-muted my-5">
                         <ul>
-                            @foreach ($business->users as $user)
+                            @foreach ($users as $user)
                             <li>{{ ucwords($user->name) }} ({{ ucwords($user->role) }})</li>
                             @endforeach
                         </ul>
                         </p>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="kt_tab_pane_6" role="tabpanel">
+                <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
                     <div class="card offset-md-2 col-md-8 user-info-card p-8">
                         <h4 class="card-title mb-4">Deactivate Account</h4>
                         <p class="card-text text-muted text-center my-5">
-                            Once your account is deactivated, you will delete your subscriptions and cannot be
+                            Once your account is deactivated, you account will be deleted and cannot be
                             recovered.
                         </p>
                         <div class="text-end mt-5">

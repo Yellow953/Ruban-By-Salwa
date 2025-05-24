@@ -18,14 +18,12 @@ class DebtsExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        return Debt::with('currency', 'supplier', 'client')->filter()->get();
+        return Debt::with('currency', 'client')->filter()->get();
     }
 
     public function headings(): array
     {
         return [
-            'Type',
-            'Supplier',
             'Client',
             'Amount',
             'Currency',
@@ -38,8 +36,6 @@ class DebtsExport implements FromCollection, WithHeadings, WithMapping
     public function map($row): array
     {
         return [
-            $row->type,
-            $row->supplier->name,
             $row->client->name,
             $row->amount,
             $row->currency->code,

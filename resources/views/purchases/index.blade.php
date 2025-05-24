@@ -64,20 +64,6 @@
                 <div class="row g-8 mb-8">
                     <!--begin::Col-->
                     <div class="col-md-6">
-                        <label class="fs-6 form-label fw-bold text-dark">Supplier</label>
-                        <select name="supplier_id" class="form-select" data-control="select2"
-                            data-placeholder="Select an option">
-                            <option value=""></option>
-                            @foreach ($suppliers as $supplier)
-                            <option value="{{ $supplier->id }}" {{ request()->query('supplier_id')==$supplier->id ?
-                                'selected' :
-                                '' }}>{{ ucwords($supplier->name) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <!--end::Col-->
-                    <!--begin::Col-->
-                    <div class="col-md-6">
                         <label class="fs-6 form-label fw-bold text-dark">Purchase Date</label>
                         <input type="date" class="form-control form-control-solid border" name="purchase_date"
                             value="{{ request()->query('purchase_date') }}" />
@@ -91,7 +77,7 @@
                     </div>
                     <!--end::Col-->
                     <!--begin::Col-->
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="fs-6 form-label fw-bold text-dark">Notes</label>
                         <input type="text" class="form-control form-control-solid border" name="notes"
                             value="{{ request()->query('notes') }}" placeholder="Enter Notes..." />
@@ -124,7 +110,6 @@
                     <thead>
                         <tr class="text-center">
                             <th class="col-2 p-3">NO</th>
-                            <th class="col-2 p-3">Supplier</th>
                             <th class="col-2 p-3">Date</th>
                             <th class="col-2 p-3">Invoice Number</th>
                             <th class="col-2 p-3">Total</th>
@@ -140,11 +125,6 @@
                                 <div class="text-center">
                                     <span class="text-primary fw-bold">#
                                         {{ ucwords($purchase->number) }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    {{ ucwords($purchase->supplier->name) }}
                                 </div>
                             </td>
                             <td class="text-center">
@@ -182,7 +162,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <th colspan="6">
+                            <th colspan="5">
                                 <div class="text-center">No Purchases Yet ...</div>
                             </th>
                         </tr>
@@ -192,7 +172,7 @@
 
                     <tfoot>
                         <tr>
-                            <th colspan="6">
+                            <th colspan="5">
                                 {{ $purchases->appends(request()->query())->links() }}
                             </th>
                         </tr>

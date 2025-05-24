@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Log;
 use App\Models\Product;
 use App\Models\Purchase;
-use App\Models\Supplier;
 use App\Exports\PurchasesExport;
 use App\Models\PurchaseItem;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -22,26 +21,23 @@ class PurchaseController extends Controller
 
     public function index()
     {
-        $purchases = Purchase::select('id', 'number', 'supplier_id', 'currency_id', 'purchase_date', 'invoice_number', 'total', 'total')->filter()->orderBy('id', 'desc')->paginate(25);
-        $suppliers = Supplier::select('id', 'name')->get();
+        $purchases = Purchase::select('id', 'number', 'currency_id', 'purchase_date', 'invoice_number', 'total', 'total')->filter()->orderBy('id', 'desc')->paginate(25);
 
-        $data = compact('purchases', 'suppliers');
+        $data = compact('purchases');
         return view('purchases.index', $data);
     }
 
     public function new()
     {
-        $suppliers = Supplier::select('id', 'name')->get();
         $products = Product::select('id', 'name')->get();
 
-        $data = compact('suppliers', 'products');
+        $data = compact('products');
         return view('purchases.new', $data);
     }
 
     public function create(Request $request)
     {
         $request->validate([
-            'supplier_id' => 'required',
             'purchase_date' => 'required|date',
             'invoice_number' => 'required|string|max:255',
             'notes' => 'nullable|string',
@@ -56,7 +52,6 @@ class PurchaseController extends Controller
         try {
             $purchase = Purchase::create([
                 'number' => Purchase::generate_number(),
-                'supplier_id' => $request->supplier_id,
                 'currency_id' => auth()->user()->currency_id,
                 'purchase_date' => $request->purchase_date,
                 'invoice_number' => $request->invoice_number,
@@ -219,7 +214,7 @@ class PurchaseController extends Controller
 
     public function pdf(Request $request)
     {
-        $purchases = Purchase::with('supplier')->filter()->get();
+        $purchases = Purchase::filter()->get();
 
         $pdf = Pdf::loadView('purchases.pdf', compact('purchases'));
 

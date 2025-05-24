@@ -60,24 +60,6 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="supplier_id" class="col-form-label">Supplier *</label>
-
-                                <select name="supplier_id" id="supplier_id" required class="form-select"
-                                    data-control="select2" required data-placeholder="Select an option">
-                                    <option value="">Select Supplier</option>
-                                    @foreach ($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}" {{ $supplier->id==old('supplier_id') ?
-                                        'selected' : '' }}>
-                                        {{ $supplier->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label for="invoice_number" class="col-form-label">Invoice Number
                                     *</label>
 

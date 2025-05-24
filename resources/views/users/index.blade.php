@@ -64,7 +64,7 @@
                 <div class="row g-8 mb-8">
 
                     <!--begin::Col-->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="fs-6 form-label fw-bold text-dark">Email</label>
                         <input type="email" class="form-control" name="email" value="{{ request()->query('email') }}"
                             placeholder="Enter Email..." />
@@ -72,7 +72,7 @@
                     <!--end::Col-->
 
                     <!--begin::Col-->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="fs-6 form-label fw-bold text-dark">Phone</label>
                         <input type="tel" class="form-control" name="phone" value="{{ request()->query('phone') }}"
                             placeholder="Enter Phone..." />
@@ -80,29 +80,13 @@
                     <!--end::Col-->
 
                     <!--begin::Col-->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="fs-6 form-label fw-bold text-dark">Role</label>
                         <select name="role" class="form-select" data-control="select2" data-placeholder="Select a Role">
                             <option value=""></option>
                             @foreach ($roles as $role)
                             <option value="{{ $role }}" {{ request()->query('role') == $role ? 'selected' : '' }}>
                                 {{ ucfirst($role) }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <!--end::Col-->
-
-                    <!--begin::Col-->
-                    <div class="col-md-6">
-                        <label class="fs-6 form-label fw-bold text-dark">Business</label>
-                        <select name="business_id" class="form-select" data-control="select2"
-                            data-placeholder="Select a Business">
-                            <option value=""></option>
-                            @foreach ($businesses as $business)
-                            <option value="{{ $business->id }}" {{ request()->query('business_id') == $business->id ?
-                                'selected' : '' }}>
-                                {{ $business->name }}
                             </option>
                             @endforeach
                         </select>
@@ -134,10 +118,8 @@
                     <!--begin::Table head-->
                     <thead>
                         <tr class="text-center">
-                            <th class="col-2 p-3">User</th>
-                            <th class="col-2 p-3">Contact</th>
-                            <th class="col-2 p-3">Business</th>
-                            <th class="col-2 p-3">Subscription</th>
+                            <th class="col-4 p-3">User</th>
+                            <th class="col-4 p-3">Contact</th>
                             <th class="col-2 p-3">Role</th>
                             <th class="col-2 p-3">Actions</th>
                         </tr>
@@ -169,22 +151,11 @@
                                 </div>
                             </td>
                             <td class="text-center">
-                                {{ ucwords($user->business->name ?? 'No Business Yet...') }}
-                            </td>
-                            <td class="text-center">
-                                Ends {{ \Carbon\Carbon::parse($user->subscription->ends_at)->diffForHumans() }}
-                            </td>
-                            <td class="text-center">
                                 <span
                                     class="badge {{ $user->role == 'admin' ? 'badge-light-success' : '' }} {{ $user->role == 'user' ? 'badge-light-primary' : '' }}">{{
                                     ucwords($user->role) }}</span>
                             </td>
                             <td class="d-flex justify-content-end border-0">
-                                <a href="{{ route('subscriptions.edit', $user->subscription->id) }}"
-                                    class="btn btn-icon btn-warning btn-sm me-1">
-                                    <i class="bi bi-patch-check"></i>
-                                </a>
-
                                 <a href="{{ route('users.edit', $user->id) }}"
                                     class="btn btn-icon btn-warning btn-sm me-1">
                                     <i class="bi bi-pen-fill"></i>
@@ -200,7 +171,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <th colspan="6">
+                            <th colspan="4">
                                 <div class="text-center">No Users Yet ...</div>
                             </th>
                         </tr>
@@ -210,7 +181,7 @@
 
                     <tfoot>
                         <tr>
-                            <th colspan="6">
+                            <th colspan="4">
                                 {{ $users->appends(request()->query())->links() }}
                             </th>
                         </tr>

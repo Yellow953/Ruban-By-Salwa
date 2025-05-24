@@ -3,303 +3,287 @@
 @section('title', 'analytics')
 
 @section('content')
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!--begin::Content wrapper-->
-    <div class="d-flex flex-column flex-column-fluid">
-        <!--begin::Content-->
-        <div id="kt_app_content" class="app-content flex-column-fluid">
-            <!--begin::Content container-->
-            <div id="kt_app_content_container" class="app-container container-fluid">
-                <!-- Quick Stats Row -->
-                <div class="row g-5 g-xl-10 mb-5">
-                    <div class="col-md-4">
-                        <div class="card card-flush h-100 shadow-sm hover-elevate-up">
-                            <div class="card-body p-4">
-                                <div class="d-flex flex-column">
-                                    <div class="text-primary fw-semibold mb-2">Today's Sales</div>
-                                    <div class="fs-2x fw-bold">
-                                        {{ $currency->symbol }}{{ number_format($todays_sales * $currency->rate, 2) }}</div>
+<!--begin::Content wrapper-->
+<div class="d-flex flex-column flex-column-fluid">
+    <!--begin::Content-->
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <!--begin::Content container-->
+        <div id="kt_app_content_container" class="app-container container-fluid">
+            <!-- Quick Stats Row -->
+            <div class="row g-5 g-xl-10 mb-5">
+                <div class="col-md-4">
+                    <div class="card card-flush h-100 shadow-sm hover-elevate-up">
+                        <div class="card-body p-4">
+                            <div class="d-flex flex-column">
+                                <div class="text-primary fw-semibold mb-2">Today's Sales</div>
+                                <div class="fs-2x fw-bold">
+                                    {{ $currency->symbol }}{{ number_format($todays_sales * $currency->rate, 2) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-flush h-100 shadow-sm hover-elevate-up">
+                        <div class="card-body p-4">
+                            <div class="d-flex flex-column">
+                                <div class="text-success fw-semibold mb-2">Today's Profit</div>
+                                <div class="fs-2x fw-bold">
+                                    {{ $currency->symbol }}{{ number_format($todays_profit * $currency->rate, 2) }}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card card-flush h-100 shadow-sm hover-elevate-up">
-                            <div class="card-body p-4">
-                                <div class="d-flex flex-column">
-                                    <div class="text-success fw-semibold mb-2">Today's Profit</div>
-                                    <div class="fs-2x fw-bold">
-                                        {{ $currency->symbol }}{{ number_format($todays_profit * $currency->rate, 2) }}
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-flush h-100 shadow-sm hover-elevate-up">
+                        <div class="card-body p-4">
+                            <div class="d-flex flex-column">
+                                <div class="text-info fw-semibold mb-2">Today's Orders</div>
+                                <div class="fs-2x fw-bold">{{ $todays_orders_count }} Orders</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Detail and Report Generation -->
+            <div class="row g-5 g-xl-10 mb-5">
+                <!-- Today's Orders List -->
+                <div class="col-md-8">
+                    <div class="card card-flush h-100 shadow-sm">
+                        <div class="card-header pt-7">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bold text-gray-800">Today's Orders</span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-row-bordered table-hover">
+                                    <thead>
+                                        <tr class="fw-bold fs-6 text-gray-800">
+                                            <th>Order No</th>
+                                            <th>Cashier</th>
+                                            <th>Sub Total</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($todays_orders as $order)
+                                        <tr>
+                                            <td>{{ $order->order_number }}</td>
+                                            <td>{{ ucwords($order->cashier->name) }}</td>
+                                            <td>{{ $order->currency->symbol }}{{ number_format($order->sub_total, 2) }}
+                                            </td>
+                                            <td>{{ $order->currency->symbol }}{{ number_format($order->total, 2) }}
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Generation -->
+                <div class="col-md-4">
+                    <div class="card card-flush h-100 shadow-sm">
+                        <div class="card-header">
+                            <h3 class="card-title">Generate Reports</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h4 class="fs-6 fw-semibold mb-3">Standard Reports</h4>
+                                <div class="d-grid gap-3">
+                                    <a href="{{ route('analytics.daily-report') }}" class="btn btn-primary">Generate
+                                        Daily Report</a>
+                                    <a href="{{ route('analytics.weekly-report') }}" class="btn btn-primary">Generate
+                                        Weekly Report</a>
+                                    <a href="{{ route('analytics.monthly-report') }}" class="btn btn-primary">Generate
+                                        Monthly Report</a>
+                                </div>
+                            </div>
+
+                            <div class="separator separator-dashed my-5"></div>
+
+                            <div>
+                                <h4 class="fs-6 fw-semibold mb-3">Custom Report</h4>
+                                <form action="{{ route('analytics.custom-report') }}" method="GET">
+                                    <div class="mb-3">
+                                        <label class="form-label">Start Date</label>
+                                        <input type="date" id="start_date" name="start_date" class="form-control"
+                                            required>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card card-flush h-100 shadow-sm hover-elevate-up">
-                            <div class="card-body p-4">
-                                <div class="d-flex flex-column">
-                                    <div class="text-info fw-semibold mb-2">Today's Orders</div>
-                                    <div class="fs-2x fw-bold">{{ $todays_orders_count }} Orders</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Orders Detail and Report Generation -->
-                <div class="row g-5 g-xl-10 mb-5">
-                    <!-- Today's Orders List -->
-                    <div class="col-md-8">
-                        <div class="card card-flush h-100 shadow-sm">
-                            <div class="card-header pt-7">
-                                <h3 class="card-title align-items-start flex-column">
-                                    <span class="card-label fw-bold text-gray-800">Today's Orders</span>
-                                </h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-row-bordered table-hover">
-                                        <thead>
-                                            <tr class="fw-bold fs-6 text-gray-800">
-                                                <th>Order No</th>
-                                                <th>Cashier</th>
-                                                <th>Sub Total</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($todays_orders as $order)
-                                                <tr>
-                                                    <td>{{ $order->order_number }}</td>
-                                                    <td>{{ ucwords($order->cashier->name) }}</td>
-                                                    <td>{{ $order->currency->symbol }}{{ number_format($order->sub_total, 2) }}
-                                                    </td>
-                                                    <td>{{ $order->currency->symbol }}{{ number_format($order->total, 2) }}
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Report Generation -->
-                    <div class="col-md-4">
-                        <div class="card card-flush h-100 shadow-sm">
-                            <div class="card-header">
-                                <h3 class="card-title">Generate Reports</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <h4 class="fs-6 fw-semibold mb-3">Standard Reports</h4>
-                                    <div class="d-grid gap-3">
-                                        <a href="{{ route('analytics.daily-report') }}" class="btn btn-primary">Generate
-                                            Daily Report</a>
-                                        <a href="{{ route('analytics.weekly-report') }}" class="btn btn-primary">Generate
-                                            Weekly Report</a>
-                                        <a href="{{ route('analytics.monthly-report') }}" class="btn btn-primary">Generate
-                                            Monthly Report</a>
+                                    <div class="mb-3">
+                                        <label class="form-label">End Date</label>
+                                        <input type="date" id="end_date" name="end_date" class="form-control" required>
                                     </div>
-                                </div>
-
-                                <div class="separator separator-dashed my-5"></div>
-
-                                <div>
-                                    <h4 class="fs-6 fw-semibold mb-3">Custom Report</h4>
-                                    <form action="{{ route('analytics.custom-report') }}" method="GET">
-                                        <div class="mb-3">
-                                            <label class="form-label">Start Date</label>
-                                            <input type="date" id="start_date" name="start_date" class="form-control"
-                                                required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">End Date</label>
-                                            <input type="date" id="end_date" name="end_date" class="form-control"
-                                                required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100">Generate Custom Report</button>
-                                    </form>
-                                </div>
+                                    <button type="submit" class="btn btn-primary w-100">Generate Custom Report</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Charts Row -->
-                <div class="row g-5 g-xl-10 mb-5">
-
-<!-- Supplier and Client Debt Chart -->
-<div class="col-md-6 mb-auto">
-    <div class="card card-flush h-100 shadow-sm">
-        <div class="card-header">
-            <h3 class="card-title">Supplier and Client Debt</h3>
-        </div>
-        <div class="card-body">
-            <canvas id="debtChart" class="w-100"></canvas>
-        </div>
-    </div>
-</div>
-                    <!-- Product Performance -->
-                    <div class="col-md-6">
-                        <div class="card card-flush h-100 shadow-sm">
-                            <div class="card-header">
-                                <h3 class="card-title">Product Performance</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-row-bordered table-hover align-middle gs-0 gy-3">
-                                        <thead>
-                                            <tr class="fw-bold text-gray-800 border-bottom-2 border-gray-200">
-                                                <th class="min-w-175px">ITEM</th>
-                                                <th class="text-end min-w-100px">PROFIT</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="product-list"></tbody>
-                                    </table>
-                                    <div id="pagination-controls" class="d-flex justify-content-center mt-4"></div>
-                                </div>
+            <!-- Charts Row -->
+            <div class="row g-5 g-xl-10 mb-5">
+                <!-- Product Performance -->
+                <div class="col-md-12">
+                    <div class="card card-flush h-100 shadow-sm">
+                        <div class="card-header">
+                            <h3 class="card-title">Product Performance</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-row-bordered table-hover align-middle gs-0 gy-3">
+                                    <thead>
+                                        <tr class="fw-bold text-gray-800 border-bottom-2 border-gray-200">
+                                            <th class="min-w-175px">ITEM</th>
+                                            <th class="text-end min-w-100px">PROFIT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="product-list"></tbody>
+                                </table>
+                                <div id="pagination-controls" class="d-flex justify-content-center mt-4"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
 
-                <!-- Purchases -->
-                <div class="row g-5 g-xl-10 mb-5">
+            <!-- Purchases -->
+            <div class="row g-5 g-xl-10 mb-5">
 
 
-                    <!-- Recent Purchases -->
-                    <div class="col-md-6">
-                        <div class="card card-flush h-100 shadow-sm">
-                            <div class="card-header">
-                                <h3 class="card-title">Recent Purchases</h3>
-                                <div class="card-toolbar">
-                                    <a href="{{ route('purchases') }}" class="btn btn-sm btn-light">View All</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-                                        <thead>
-                                            <tr class="fw-bold text-muted bg-light">
-
-                                                <th class="min-w-100px">Date</th>
-                                                <th class="min-w-150px">Supplier</th>
-                                                <th class="min-w-100px text-end">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($recentPurchases as $purchase)
-                                                <tr>
-
-                                                    <td>
-                                                        <span
-                                                            class="text-muted fw-semibold">{{ \Carbon\Carbon::parse($purchase->purchase_date)->format('M d, Y') }}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span
-                                                            class="text-dark fw-semibold">{{ $purchase->supplier->name }}</span>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <span
-                                                            class="text-dark fw-bold">{{ $currency->symbol }}{{ number_format($purchase->total * $currency->rate, 2) }}</span>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                <!-- Recent Purchases -->
+                <div class="col-md-6">
+                    <div class="card card-flush h-100 shadow-sm">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Purchases</h3>
+                            <div class="card-toolbar">
+                                <a href="{{ route('purchases') }}" class="btn btn-sm btn-light">View All</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card card-flush h-100 shadow-sm">
-                            <div class="card-header">
-                                <h3 class="card-title">Recent Expenses</h3>
-                                <div class="card-toolbar">
-                                    <a href="{{ route('expenses') }}" class="btn btn-sm btn-light">View All</a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-                                        <thead>
-                                            <tr class="fw-bold text-muted bg-light">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                    <thead>
+                                        <tr class="fw-bold text-muted bg-light">
+                                            <th class="min-w-100px">Date</th>
+                                            <th class="min-w-100px text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($recentPurchases as $purchase)
+                                        <tr>
 
-                                                <th class="min-w-100px">Date</th>
-                                                <th class="min-w-150px">Category</th>
-
-                                                <th class="min-w-100px text-end">Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="recent-expenses-table">
-                                            @foreach ($recentExpenses as $expense)
-                                                <tr>
-
-                                                    <td>
-                                                        <span class="text-muted fw-semibold">{{ \Carbon\Carbon::parse($expense->date)->format('M d, Y') }}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-light-primary">{{ $expense->category }}</span>
-                                                    </td>
-
-                                                    <td class="text-end">
-                                                        <span class="text-dark fw-bold">{{ $currency->symbol }}{{ number_format($expense->amount * $currency->rate, 2) }}</span>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            <td>
+                                                <span class="text-muted fw-semibold">{{
+                                                    \Carbon\Carbon::parse($purchase->purchase_date)->format('M d, Y')
+                                                    }}</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="text-dark fw-bold">{{ $currency->symbol }}{{
+                                                    number_format($purchase->total * $currency->rate, 2) }}</span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="row g-5 g-xl-10 mb-5">
-
-
-                      <!-- Peak Hours Analysis -->
-                      <div class="col-md-6 mb-auto">
-                        <div class="card card-flush h-100 shadow-sm">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h3 class="card-title">Peak Hours Analysis</h3>
-                                <div>
-                                    <label for="datePicker" class="me-2">Select Date:</label>
-                                    <input type="date" id="datePicker" class="form-control" style="width: 200px;"
-                                        value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="peakHoursChart" class="w-100"></canvas>
+                <div class="col-md-6">
+                    <div class="card card-flush h-100 shadow-sm">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Expenses</h3>
+                            <div class="card-toolbar">
+                                <a href="{{ route('expenses') }}" class="btn btn-sm btn-light">View All</a>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                                    <thead>
+                                        <tr class="fw-bold text-muted bg-light">
 
+                                            <th class="min-w-100px">Date</th>
+                                            <th class="min-w-150px">Category</th>
+
+                                            <th class="min-w-100px text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-expenses-table">
+                                        @foreach ($recentExpenses as $expense)
+                                        <tr>
+
+                                            <td>
+                                                <span class="text-muted fw-semibold">{{
+                                                    \Carbon\Carbon::parse($expense->date)->format('M d, Y') }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-light-primary">{{ $expense->category }}</span>
+                                            </td>
+
+                                            <td class="text-end">
+                                                <span class="text-dark fw-bold">{{ $currency->symbol }}{{
+                                                    number_format($expense->amount * $currency->rate, 2) }}</span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-5 g-xl-10 mb-5">
+
+
+                <!-- Peak Hours Analysis -->
+                <div class="col-md-6 mb-auto">
+                    <div class="card card-flush h-100 shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title">Peak Hours Analysis</h3>
+                            <div>
+                                <label for="datePicker" class="me-2">Select Date:</label>
+                                <input type="date" id="datePicker" class="form-control" style="width: 200px;"
+                                    value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="peakHoursChart" class="w-100"></canvas>
+                        </div>
                     </div>
 
-                    <!-- Cash Flow Chart -->
-                    <div class="col-md-6 mb-auto">
-                        <div class="card card-flush h-100 shadow-sm">
-                            <div class="card-header">
-                                <h3 class="card-title">Daily Cash Flow</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="cashFlowChart" class="w-100"></canvas>
-                            </div>
+                </div>
+
+                <!-- Cash Flow Chart -->
+                <div class="col-md-6 mb-auto">
+                    <div class="card card-flush h-100 shadow-sm">
+                        <div class="card-header">
+                            <h3 class="card-title">Daily Cash Flow</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="cashFlowChart" class="w-100"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // Initialize data from PHP
+<script>
+    // Initialize data from PHP
         const products = @json($products);
         const assetBaseUrl = "{{ asset('') }}";
         const hourlyOrders = @json($hourly_orders);
@@ -388,7 +372,6 @@
 
         function initializeCharts() {
             initializePeakHoursChart();
-            initializeDebtChart();
             initializeCashFlowChart();
         }
 
@@ -566,103 +549,6 @@
             }
             return result;
         }
-
-        function initializeDebtChart() {
-            const debtChartCtx = document.getElementById('debtChart');
-            if (!debtChartCtx) return;
-
-            new Chart(debtChartCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Supplier Debt', 'Client Debt'],
-                    datasets: [{
-                        data: [
-                            {{ $totalSupplierDebt * $currency->rate }},
-                            {{ $totalClientDebt * $currency->rate }}
-                        ],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.85)',
-                            'rgba(75, 192, 192, 0.85)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 2,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '60%',
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'right',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                pointStyle: 'circle',
-                                font: {
-                                    size: 12,
-                                    family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
-                                },
-                                generateLabels: (chart) => {
-                                    const datasets = chart.data.datasets;
-                                    const total = datasets[0].data.reduce((acc, curr) => acc + curr, 0);
-
-                                    return chart.data.labels.map((label, index) => {
-                                        const value = datasets[0].data[index];
-                                        const percentage = ((value / total) * 100).toFixed(1);
-                                        return {
-                                            text: `${label}: ${formatCurrency(value)} (${percentage}%)`,
-                                            fillStyle: datasets[0].backgroundColor[index],
-                                            strokeStyle: datasets[0].borderColor[index],
-                                            lineWidth: datasets[0].borderWidth,
-                                            hidden: isNaN(value) || value === 0,
-                                            index: index
-                                        };
-                                    });
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                            titleColor: '#333',
-                            titleFont: {
-                                size: 14,
-                                weight: 'bold'
-                            },
-                            bodyColor: '#333',
-                            bodyFont: {
-                                size: 13
-                            },
-                            padding: 12,
-                            borderColor: '#ddd',
-                            borderWidth: 1,
-                            displayColors: true,
-                            callbacks: {
-                                label: (context) => {
-                                    const total = context.dataset.data.reduce((acc, curr) => acc + curr, 0);
-                                    const percentage = ((context.raw / total) * 100).toFixed(1);
-                                    return `${context.label}: ${formatCurrency(context.raw)} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    },
-                    layout: {
-                        padding: {
-                            top: 20,
-                            bottom: 20,
-                            left: 20,
-                            right: 20
-                        }
-                    }
-                }
-            });
-        }
-
 
         function initializePurchaseTrendChart() {
             const purchaseTrendCtx = document.getElementById('purchaseTrendChart');
@@ -857,5 +743,5 @@
                 });
             });
         }
-    </script>
+</script>
 @endsection

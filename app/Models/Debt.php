@@ -22,11 +22,6 @@ class Debt extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
-    }
-
     // Permissions
     public function can_delete()
     {
@@ -36,10 +31,6 @@ class Debt extends Model
     // Filter
     public function scopeFilter($q)
     {
-        if (request('supplier_id')) {
-            $supplier_id = request('supplier_id');
-            $q->where('supplier_id', $supplier_id);
-        }
         if (request('client_id')) {
             $client_id = request('client_id');
             $q->where('client_id', $client_id);

@@ -18,14 +18,13 @@ class PurchasesExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        return Purchase::with('supplier')->filter()->get();
+        return Purchase::filter()->get();
     }
 
     public function headings(): array
     {
         return [
             'NO',
-            'Supplier',
             'Purchase Date',
             'Total',
             'Invoice Number',
@@ -38,7 +37,6 @@ class PurchasesExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             $row->number,
-            $row->supplier->name,
             $row->purchase_date,
             $row->total,
             $row->invoice_number,
