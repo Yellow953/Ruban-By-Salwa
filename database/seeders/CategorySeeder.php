@@ -10,7 +10,12 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['Category 1', 'Category 1 ...', 'assets/images/no_img.png'],
+            ['Hard goods', 'Hard goods ...', 'assets/images/no_img.png'],
+            ['Home decoration', 'Home decoration ...', 'assets/images/no_img.png'],
+            ['Hand made', 'Hand made ...', 'assets/images/no_img.png'],
+            ['Plants and flowers', 'Plants and flowers ...', 'assets/images/no_img.png'],
+            ['home fragrances', 'home fragrances ...', 'assets/images/no_img.png'],
+            ['Home collection', 'Home collection ...', 'assets/images/no_img.png'],
             ['Others', 'Everything else...', 'assets/images/no_img.png'],
             ['Favorite', 'Favorite Items...', 'assets/images/no_img.png'],
         ];

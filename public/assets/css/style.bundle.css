@@ -34117,8 +34117,8 @@ fieldset:disabled .btn {
     --bs-menu-link-bg-color-show: #f4f6fa;
     --bs-menu-link-bg-color-here: #f4f6fa;
     --bs-menu-link-bg-color-active: #f4f6fa;
-    --bs-scrollbar-color: #f3c623;
-    --bs-scrollbar-hover-color: #f3c623;
+    --bs-scrollbar-color: #771a36;
+    --bs-scrollbar-hover-color: #771a36;
     --bs-scrollbar-size: 5px;
     --bs-scrollbar-overlay-size: 19px;
     --bs-scrollbar-overlay-space: 7px;
@@ -34264,8 +34264,8 @@ fieldset:disabled .btn {
     --bs-menu-link-bg-color-show: #2b2b40;
     --bs-menu-link-bg-color-here: #2b2b40;
     --bs-menu-link-bg-color-active: #2b2b40;
-    --bs-scrollbar-color: #2b2b40;
-    --bs-scrollbar-hover-color: #27273a;
+    --bs-scrollbar-color: #771a36;
+    --bs-scrollbar-hover-color: #771a36;
     --bs-overlay-bg: rgba(255, 255, 255, 0.05);
     --bs-blockui-overlay-bg: rgba(255, 255, 255, 0.05);
     --bs-rating-color-default: #474761;
