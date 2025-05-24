@@ -12,11 +12,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExpenseController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function index()
     {
         $expenses = Expense::select('id', 'number', 'date', 'currency_id', 'amount', 'description', 'category')->filter()->orderBy('id', 'desc')->paginate(25);

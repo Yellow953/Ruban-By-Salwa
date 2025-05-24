@@ -19,11 +19,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin')->except('barcode');
-    }
-
     public function index()
     {
         $products = Product::select('id', 'name', 'quantity', 'cost', 'price', 'image', 'category_id', 'description')->filter()->orderBy('id', 'desc')->paginate(25);

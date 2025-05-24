@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
 use App\Helpers\Helper;
-use App\Models\Business;
 use App\Models\Currency;
 use App\Models\Log;
 use App\Models\User;

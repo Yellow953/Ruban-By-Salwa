@@ -11,11 +11,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ClientController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin')->except(['fetch', 'new_client']);
-    }
-
     public function index()
     {
         $clients = Client::select('id', 'name', 'email', 'phone', 'address')->filter()->orderBy('id', 'desc')->paginate(25);

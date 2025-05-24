@@ -12,11 +12,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function index()
     {
         $categories = Category::select('id', 'name', 'description', 'image')->with('products')->filter()->orderBy('id', 'desc')->paginate(25);

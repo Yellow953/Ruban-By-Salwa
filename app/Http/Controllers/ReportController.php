@@ -13,11 +13,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin')->except(['new_report']);
-    }
-
     public function index()
     {
         $reports = Report::select('id', 'start_cash', 'end_cash', 'date', 'currency_id')->filter()->orderBy('id', 'desc')->paginate(25);

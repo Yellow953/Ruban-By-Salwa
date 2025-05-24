@@ -92,6 +92,58 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/', [AnalyticsController::class, 'index'])->name('analytics');
         });
+
+        // Expenses Routes
+        Route::prefix('expenses')->group(function () {
+            Route::get('/export', [ExpenseController::class, 'export'])->name('expenses.export');
+            Route::get('/pdf', [ExpenseController::class, 'pdf'])->name('expenses.pdf');
+            Route::get('/new', [ExpenseController::class, 'new'])->name('expenses.new');
+            Route::post('/create', [ExpenseController::class, 'create'])->name('expenses.create');
+            Route::get('/{expense}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
+            Route::post('/{expense}/update', [ExpenseController::class, 'update'])->name('expenses.update');
+            Route::get('/{expense}/delete', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+            Route::get('/', [ExpenseController::class, 'index'])->name('expenses');
+        });
+
+        // Reports Routes
+        Route::prefix('reports')->group(function () {
+            Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
+            Route::get('/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
+            Route::get('/new', [ReportController::class, 'new'])->name('reports.new');
+            Route::post('/create', [ReportController::class, 'create'])->name('reports.create');
+            Route::get('/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
+            Route::post('/{report}/update', [ReportController::class, 'update'])->name('reports.update');
+            Route::get('/{report}/delete', [ReportController::class, 'destroy'])->name('reports.destroy');
+            Route::get('/data', [ReportController::class, 'data'])->name('reports.data');
+            Route::get('/sales', [ReportController::class, 'sales'])->name('reports.sales');
+            Route::get('/{date}/show', [ReportController::class, 'show'])->name('reports.show');
+            Route::get('/', [ReportController::class, 'index'])->name('reports');
+        });
+
+        // Debts Routes
+        Route::prefix('debts')->group(function () {
+            Route::get('/export', [DebtController::class, 'export'])->name('debts.export');
+            Route::get('/pdf', [DebtController::class, 'pdf'])->name('debts.pdf');
+            Route::get('/new', [DebtController::class, 'new'])->name('debts.new');
+            Route::post('/create', [DebtController::class, 'create'])->name('debts.create');
+            Route::get('/{debt}/edit', [DebtController::class, 'edit'])->name('debts.edit');
+            Route::post('/{debt}/update', [DebtController::class, 'update'])->name('debts.update');
+            Route::get('/{debt}/delete', [DebtController::class, 'destroy'])->name('debts.destroy');
+            Route::get('/', [DebtController::class, 'index'])->name('debts');
+        });
+
+        // Clients Routes
+        Route::prefix('clients')->group(function () {
+            Route::get('/export', [ClientController::class, 'export'])->name('clients.export');
+            Route::get('/pdf', [ClientController::class, 'pdf'])->name('clients.pdf');
+            Route::get('/new', [ClientController::class, 'new'])->name('clients.new');
+            Route::post('/create', [ClientController::class, 'create'])->name('clients.create');
+            Route::get('/{client}/history', [ClientController::class, 'history'])->name('clients.history');
+            Route::get('/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
+            Route::post('/{client}/update', [ClientController::class, 'update'])->name('clients.update');
+            Route::get('/{client}/delete', [ClientController::class, 'destroy'])->name('clients.destroy');
+            Route::get('/', [ClientController::class, 'index'])->name('clients');
+        });
     });
 
     // Stock
@@ -126,6 +178,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('products');
         });
 
+        // Orders
+        Route::prefix('orders')->group(function () {
+            Route::get('/export', [OrderController::class, 'export'])->name('orders.export');
+            Route::get('/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
+            Route::get('/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy');
+            Route::get('/{order}/show', [OrderController::class, 'show'])->name('orders.show');
+            Route::get('/', [OrderController::class, 'index'])->name('orders');
+        });
+
         // Purchases Routes
         Route::prefix('purchases')->group(function () {
             Route::get('/export', [PurchaseController::class, 'export'])->name('purchases.export');
@@ -138,18 +199,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/{purchase}/update', [PurchaseController::class, 'update'])->name('purchases.update');
             Route::get('/{purchase}/delete', [PurchaseController::class, 'destroy'])->name('purchases.destroy');
             Route::get('/', [PurchaseController::class, 'index'])->name('purchases');
-        });
-
-        // Expenses Routes
-        Route::prefix('expenses')->group(function () {
-            Route::get('/export', [ExpenseController::class, 'export'])->name('expenses.export');
-            Route::get('/pdf', [ExpenseController::class, 'pdf'])->name('expenses.pdf');
-            Route::get('/new', [ExpenseController::class, 'new'])->name('expenses.new');
-            Route::post('/create', [ExpenseController::class, 'create'])->name('expenses.create');
-            Route::get('/{expense}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
-            Route::post('/{expense}/update', [ExpenseController::class, 'update'])->name('expenses.update');
-            Route::get('/{expense}/delete', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
-            Route::get('/', [ExpenseController::class, 'index'])->name('expenses');
         });
     });
 
@@ -185,60 +234,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/fetch', [TodoController::class, 'fetch'])->name('todos.fetch');
     });
 
-    // Orders
-    Route::prefix('orders')->group(function () {
-        Route::get('/export', [OrderController::class, 'export'])->name('orders.export');
-        Route::get('/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
-        Route::get('/new', [OrderController::class, 'new'])->name('orders.new');
-        Route::post('/create', [OrderController::class, 'create'])->name('orders.create');
-        Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
-        Route::post('/{order}/update', [OrderController::class, 'update'])->name('orders.update');
-        Route::get('/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy');
-        Route::get('/{order}/show', [OrderController::class, 'show'])->name('orders.show');
-        Route::get('/', [OrderController::class, 'index'])->name('orders');
-    });
-
-    // Reports Routes
-    Route::prefix('reports')->group(function () {
-        Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
-        Route::get('/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
-        Route::get('/new', [ReportController::class, 'new'])->name('reports.new');
-        Route::post('/create', [ReportController::class, 'create'])->name('reports.create');
-        Route::get('/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
-        Route::post('/{report}/update', [ReportController::class, 'update'])->name('reports.update');
-        Route::get('/{report}/delete', [ReportController::class, 'destroy'])->name('reports.destroy');
-        Route::get('/data', [ReportController::class, 'data'])->name('reports.data');
-        Route::get('/sales', [ReportController::class, 'sales'])->name('reports.sales');
-        Route::get('/{date}/show', [ReportController::class, 'show'])->name('reports.show');
-        Route::get('/', [ReportController::class, 'index'])->name('reports');
-    });
-
-    // Debts Routes
-    Route::prefix('debts')->group(function () {
-        Route::get('/export', [DebtController::class, 'export'])->name('debts.export');
-        Route::get('/pdf', [DebtController::class, 'pdf'])->name('debts.pdf');
-        Route::get('/new', [DebtController::class, 'new'])->name('debts.new');
-        Route::post('/create', [DebtController::class, 'create'])->name('debts.create');
-        Route::get('/{debt}/edit', [DebtController::class, 'edit'])->name('debts.edit');
-        Route::post('/{debt}/update', [DebtController::class, 'update'])->name('debts.update');
-        Route::get('/{debt}/delete', [DebtController::class, 'destroy'])->name('debts.destroy');
-        Route::get('/', [DebtController::class, 'index'])->name('debts');
-    });
-
-    // Clients Routes
-    Route::prefix('clients')->group(function () {
-        Route::get('/export', [ClientController::class, 'export'])->name('clients.export');
-        Route::get('/pdf', [ClientController::class, 'pdf'])->name('clients.pdf');
-        Route::get('/fetch', [ClientController::class, 'fetch'])->name('clients.fetch');
-        Route::get('/new', [ClientController::class, 'new'])->name('clients.new');
-        Route::post('/create', [ClientController::class, 'create'])->name('clients.create');
-        Route::get('/{client}/history', [ClientController::class, 'history'])->name('clients.history');
-        Route::get('/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
-        Route::post('/{client}/update', [ClientController::class, 'update'])->name('clients.update');
-        Route::get('/{client}/delete', [ClientController::class, 'destroy'])->name('clients.destroy');
-        Route::get('/', [ClientController::class, 'index'])->name('clients');
-    });
-
     // Switch Currency
     Route::get('/currencies/switch/{currency}', [CurrencyController::class, 'switch'])->name('currencies.switch');
 
@@ -253,6 +248,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/new_debt', [DebtController::class, 'new_debt'])->name('quick.new_debt');
         Route::post('/new_report', [ReportController::class, 'new_report'])->name('quick.new_report');
     });
+
+    // Fetch Clients
+    Route::get('/fetch', [ClientController::class, 'fetch'])->name('clients.fetch');
 
     // Checkout & Sync
     Route::post('/checkout', [AppController::class, 'checkout'])->name('checkout');

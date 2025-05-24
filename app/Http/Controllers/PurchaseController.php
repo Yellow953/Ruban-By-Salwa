@@ -14,11 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PurchaseController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function index()
     {
         $purchases = Purchase::select('id', 'number', 'currency_id', 'purchase_date', 'invoice_number', 'total', 'total')->filter()->orderBy('id', 'desc')->paginate(25);

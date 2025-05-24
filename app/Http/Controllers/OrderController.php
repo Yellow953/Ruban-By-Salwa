@@ -14,11 +14,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function index()
     {
         $orders = Order::select('id', 'order_number', 'cashier_id', 'client_id', 'currency_id', 'sub_total', 'tax', 'discount', 'total', 'products_count')->filter()->orderBy('id', 'desc')->paginate(25);

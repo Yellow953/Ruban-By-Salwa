@@ -93,6 +93,70 @@
                 <!--end:Menu item-->
                 @break
 
+                @case('stock')
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu content-->
+                    <div class="menu-content">
+                        <span class="menu-heading fw-bold text-uppercase fs-7">Stock</span>
+                    </div>
+                    <!--end:Menu content-->
+                </div>
+                <!--end:Menu item-->
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link {{ request()->routeIs('categories*') ? 'active' : '' }}"
+                        href="{{ route('categories') }}">
+                        <span class="menu-icon">
+                            <i class="bi bi-layers"></i>
+                        </span>
+                        <span class="menu-title">Categories</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link {{ request()->routeIs('products*') ? 'active' : '' }}"
+                        href="{{ route('products') }}">
+                        <span class="menu-icon">
+                            <i class="bi bi-box-seam"></i>
+                        </span>
+                        <span class="menu-title">Products</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link {{ request()->routeIs('orders*') ? 'active' : '' }}"
+                        href="{{ route('orders') }}">
+                        <span class="menu-icon">
+                            <i class="bi bi-bag"></i>
+                        </span>
+                        <span class="menu-title">Orders</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link {{ request()->routeIs('purchases*') ? 'active' : '' }}"
+                        href="{{ route('purchases') }}">
+                        <span class="menu-icon">
+                            <i class="bi bi-boxes"></i>
+                        </span>
+                        <span class="menu-title">Purchases</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+                @break
+
                 @case('admin')
                 <!--begin:Menu item-->
                 <div class="menu-item">

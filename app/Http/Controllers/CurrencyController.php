@@ -12,11 +12,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class CurrencyController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin')->except(['switch']);
-    }
-
     public function index()
     {
         $currencies = Currency::select('id', 'code', 'name', 'symbol', 'rate')->filter()->orderBy('id', 'desc')->paginate(25);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Debt;
 use App\Models\Expense;
 use App\Models\Report;
 use App\Models\OrderItem;
@@ -16,11 +15,6 @@ use Illuminate\Support\Facades\DB;
 
 class AnalyticsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin')->except('index');
-    }
-
     public function index()
     {
         $currency = auth()->user()->currency;

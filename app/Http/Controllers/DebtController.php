@@ -13,11 +13,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class DebtController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin')->except(['new_debt']);
-    }
-
     public function index()
     {
         $debts = Debt::select('id', 'currency_id', 'client_id', 'amount', 'date')->filter()->orderBy('id', 'desc')->paginate(25);
