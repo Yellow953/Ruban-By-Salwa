@@ -10,6 +10,7 @@
                 currency: '{{ $currency->code }}',
                 minimumFractionDigits: 2
             });
+            this.ENCRYPTED_PASSWORD = {{ $encryptedPassword ?? 'null' }};
 
             // State
             this.orderItems = [];
@@ -41,7 +42,6 @@
             };
 
             //Barcode
-            this.productFetchUrl = "{{ route('products.barcode', ['barcode' => 'test']) }}";
             this.scannedBarcode = "";
             this.barcodeDebounceTimeout = null;
 
@@ -1008,7 +1008,14 @@
 
                 clearTimeout(this.barcodeDebounceTimeout);
                 this.barcodeDebounceTimeout = setTimeout(() => {
-                    this.processBarcodeScan(barcode);
+                    const productItem = this.findProductByBarcode(barcode);
+
+                    if (productItem) {
+                        productItem.click();
+                    } else {
+                        this.showAlert('Product not found for barcode: ' + barcode, 'warning');
+                    }
+
                     this.scannedBarcode = "";
                 }, 300);
             }else if (event.key.length === 1 && !event.ctrlKey && !event.altKey && !event.metaKey) {
@@ -1016,26 +1023,16 @@
             }
         }
 
-        async processBarcodeScan(barcode) {
-            try {
-                const url = this.productFetchUrl.replace('test', barcode);
-                const response = await fetch(url);
+        findProductByBarcode(barcode) {
+            const items = document.querySelectorAll(this.SELECTORS.PRODUCT_ITEM);
 
-                if (!response.ok) {
-                    throw new Error("Product not found.");
+            for (const item of items) {
+                const barcodes = JSON.parse(item.getAttribute('data-barcodes') || '[]');
+                if (barcodes.some(b => b.barcode === barcode)) {
+                    return item;
                 }
-
-                const product = await response.json();
-
-                if (product.variants.length != 0) {
-                    this.showVariantSelectionModal(product);
-                } else {
-                    this.addProductToOrder(product);
-                }
-            } catch (error) {
-                console.error('Error fetching product:', error);
-                this.showAlert(`Product with barcode ${barcode} not found.`, 'error');
             }
+            return null;
         }
 
         // Product Search
@@ -1053,11 +1050,25 @@
 
             document.querySelectorAll(this.SELECTORS.PRODUCT_ITEM).forEach(item => {
                 const productName = item.querySelector('.fw-bold').textContent.toLowerCase();
-                const matchesSearch = productName.includes(searchTerm);
+
+                const barcodesAttr = item.getAttribute('data-barcodes');
+                let barcodeList = [];
+                try {
+                    barcodeList = JSON.parse(barcodesAttr);
+                } catch (e) {
+                    console.error('Invalid JSON in data-barcodes:', e);
+                }
+
+                const barcodeMatch = barcodeList.some(b =>
+                    b.barcode && b.barcode.toLowerCase().includes(searchTerm)
+                );
+
+                const matchesSearch = productName.includes(searchTerm) || barcodeMatch;
                 item.style.display = matchesSearch ? '' : 'none';
 
                 if (matchesSearch) {
                     foundMatches = true;
+
                     const tabPane = item.closest('.tab-pane');
                     if (tabPane && !tabPane.classList.contains('active')) {
                         const tabId = tabPane.id;
@@ -1075,11 +1086,36 @@
         }
 
         // Discount Handling
-        showDiscountInput() {
-            this.cachedElements.discountInput.value = this.discount;
-            this.cachedElements.discountElement.classList.add('d-none');
-            this.cachedElements.discountInput.classList.remove('d-none');
-            this.cachedElements.discountInput.focus();
+        async showDiscountInput() {
+            if(this.ENCRYPTED_PASSWORD != null){
+                const password = prompt("Enter password to change discount:");
+                if (!password) return;
+
+                const hash = await this.hashPassword(password);
+                const expectedHash = this.ENCRYPTED_PASSWORD;
+
+                if (hash === expectedHash) {
+                    this.cachedElements.discountInput.value = this.discount;
+                    this.cachedElements.discountElement.classList.add('d-none');
+                    this.cachedElements.discountInput.classList.remove('d-none');
+                    this.cachedElements.discountInput.focus();
+                } else {
+                    alert("Incorrect password");
+                }
+            }else{
+                this.cachedElements.discountInput.value = this.discount;
+                this.cachedElements.discountElement.classList.add('d-none');
+                this.cachedElements.discountInput.classList.remove('d-none');
+                this.cachedElements.discountInput.focus();
+            }
+        }
+
+        async hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
         updateDiscount() {

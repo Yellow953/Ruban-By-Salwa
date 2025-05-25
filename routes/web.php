@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
         // My Business Routes
         Route::prefix('business')->group(function () {
             Route::post('/update', [ProfileController::class, 'business_update'])->name('business.update');
+            Route::post('/change_password', [ProfileController::class, 'business_change_password'])->name('business.change_password');
             Route::get('/', [ProfileController::class, 'business'])->name('business');
         });
 
@@ -236,8 +237,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Switch Currency
     Route::get('/currencies/switch/{currency}', [CurrencyController::class, 'switch'])->name('currencies.switch');
-
-    Route::get('/products/barcode/{barcode}', [ProductController::class, 'barcode'])->name('products.barcode');
 
     // Navigation
     Route::post('/navigate', [AppController::class, 'navigate'])->name('navigate');

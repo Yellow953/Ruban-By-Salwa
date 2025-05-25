@@ -62,6 +62,11 @@ class Product extends Model
             $description = request('description');
             $q->where('description', 'LIKE', "%{$description}%");
         }
+        if (request('barcode')) {
+            $q->whereHas('barcodes', function ($query) {
+                $query->where('barcode', 'LIKE', '%' . request('barcode') . '%');
+            });
+        }
 
         return $q;
     }

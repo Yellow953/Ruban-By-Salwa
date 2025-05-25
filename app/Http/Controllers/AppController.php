@@ -31,12 +31,13 @@ class AppController extends Controller
             ->with([
                 'products' => function ($query) {
                     $query->where('quantity', '>', 0)
-                        ->with(['variants.options']);
+                        ->with(['variants.options', 'barcodes']);
                 }
             ])
             ->get();
+        $encryptedPassword = $business->password ? hash('sha256', $business->password) : null;
 
-        $data = compact('categories', 'currency', 'currencies', 'bank_notes', 'last_order', 'business', 'clients');
+        $data = compact('categories', 'currency', 'currencies', 'bank_notes', 'last_order', 'business', 'clients', 'encryptedPassword');
         return view('index', $data);
     }
 

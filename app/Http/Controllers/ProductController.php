@@ -294,23 +294,6 @@ class ProductController extends Controller
         return redirect()->route('products')->with('success', 'Stock Imported Successfully...');
     }
 
-    public function barcode($barcode)
-    {
-        $barcodeEntry = Barcode::where('barcode', $barcode)->with('product.variants.options')->first();
-
-        if ($barcodeEntry) {
-            $product = $barcodeEntry->product;
-
-            $currencyRate = auth()->user()->currency->rate ?? 1;
-
-            $product->price = $product->price * $currencyRate;
-
-            return response()->json($product);
-        }
-
-        return response()->json(['message' => 'Product not found.'], 404);
-    }
-
     public function generate_barcodes()
     {
         return view('products.generate_barcodes');

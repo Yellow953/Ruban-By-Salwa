@@ -82,6 +82,13 @@
                     <!--end::Col-->
                     <!--begin::Col-->
                     <div class="col-md-6">
+                        <label class="fs-6 form-label fw-bold text-dark">Barcode</label>
+                        <input type="text" class="form-control form-control-solid border" name="barcode"
+                            value="{{ request()->query('barcode') }}" placeholder="Enter Barcode..." />
+                    </div>
+                    <!--end::Col-->
+                    <!--begin::Col-->
+                    <div class="col-md-12">
                         <label class="fs-6 form-label fw-bold text-dark">Description</label>
                         <input type="text" class="form-control form-control-solid border" name="description"
                             value="{{ request()->query('description') }}" placeholder="Enter Description..." />

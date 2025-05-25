@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->string('logo')->default('assets/images/no_img.png');
             $table->bigInteger("tax_id")->unsigned();
+            $table->string('password')->nullable();
             $table->timestamps();
 
             $table->foreign('tax_id')->references('id')->on('taxes');

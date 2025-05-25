@@ -386,14 +386,33 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
-                    <div class="card offset-md-2 col-md-8 user-info-card p-8">
-                        <h4 class="card-title mb-4">Deactivate Account</h4>
-                        <p class="card-text text-muted text-center my-5">
-                            Once your account is deactivated, you account will be deleted and cannot be
-                            recovered.
-                        </p>
-                        <div class="text-end mt-5">
-                            <a href="#" class="btn btn-danger w-md-25">Deactivate</a>
+                    <div class="row gap-5">
+                        <div class="card col-md-5 user-info-card p-8">
+                            <h4 class="card-title mb-4">Change Password</h4>
+                            <form action="{{ route('business.change_password') }}" enctype="multipart/form-data"
+                                method="post">
+                                @csrf
+
+                                <div class="form-group">
+                                    <label class="required form-label">New Password</label>
+                                    <input type="text" class="form-control" name="password" required />
+                                </div>
+
+                                <div class="text-end mt-5">
+                                    <button type="submit" class="btn btn-danger w-md-25">Change</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="card col-md-6 user-info-card p-8">
+                            <h4 class="card-title mb-4">Deactivate Account</h4>
+                            <p class="card-text text-muted text-center my-5">
+                                Once your account is deactivated, you account will be deleted and cannot be
+                                recovered.
+                            </p>
+                            <div class="text-end mt-5">
+                                <a href="#" class="btn btn-danger w-md-25">Deactivate</a>
+                            </div>
                         </div>
                     </div>
                 </div>

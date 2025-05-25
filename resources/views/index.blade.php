@@ -100,7 +100,7 @@
                     <div class="card-body">
                         <div class="mb-5">
                             <input type="text" id="product_search" class="form-control"
-                                placeholder="Search Products by Name...">
+                                placeholder="Search Products by Name or Barcode...">
                         </div>
 
                         <ul
@@ -133,6 +133,7 @@
                                     @forelse ($category->products as $product)
                                     <div class="card card-flush flex-row-fluid p-0 pb-5 mw-100 border-primary product-item align-items-center"
                                         data-product-id="{{ $product->id }}" data-quantity="{{ $product->quantity }}"
+                                        data-barcodes="{{ $product->barcodes ? $product->barcodes->map(function($barcode) { return ['barcode' => $barcode->barcode ];})->toJson() : '[]' }}"
                                         data-variants="{{ $product->variants ? $product->variants->map(function($variant) { return ['id' => $variant->id,'title' => $variant->title,'options' => $variant->options->map(function($option) {return ['id' => $option->id,'value' => $option->value,'price' => $option->price,];}),];})->toJson() : '[]' }}">
                                         <div class="card-body text-center w-150px">
                                             <img src="{{ asset($product->image) }}" loading="lazy" decoding="async"

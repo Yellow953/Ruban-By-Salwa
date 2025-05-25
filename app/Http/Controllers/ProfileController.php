@@ -19,7 +19,7 @@ class ProfileController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('admin')->only(['business', 'business_update']);
+        $this->middleware('admin')->only(['business', 'business_update', 'business_change_password']);
     }
 
     public function show()
@@ -157,5 +157,24 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Business updated successfully!');
+    }
+
+    public function business_change_password(Request $request)
+    {
+        $request->validate([
+            'password' => 'required',
+        ]);
+
+        $business = Business::firstOrFail();
+
+        $business->update([
+            'password' => $request->password,
+        ]);
+
+        Log::create([
+            'text' => auth()->user()->name . ' updated Business Password, datetime: ' . now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Password updated successfully!');
     }
 }
