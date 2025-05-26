@@ -23,8 +23,9 @@ class AppController extends Controller
     {
         $business = Business::firstOrFail();
         $currency = auth()->user()->currency;
+        $exchange_rate = Currency::where('code', 'LBP')->firstOrFail()->rate;
         $currencies = Currency::select('id', 'code')->get();
-        $bank_notes = BankNote::where('currency_code', auth()->user()->currency->code)->get();
+        $bank_notes = BankNote::get();
         $last_order = Order::whereNotNull('cashier_id')->latest()->first();
         $clients = Client::select('id', 'name')->orderBy('created_at', 'DESC')->get();
         $categories = Category::select('id', 'name', 'image')
@@ -37,7 +38,7 @@ class AppController extends Controller
             ->get();
         $encryptedPassword = $business->password ? hash('sha256', $business->password) : null;
 
-        $data = compact('categories', 'currency', 'currencies', 'bank_notes', 'last_order', 'business', 'clients', 'encryptedPassword');
+        $data = compact('categories', 'currency', 'exchange_rate', 'currencies', 'bank_notes', 'last_order', 'business', 'clients', 'encryptedPassword');
         return view('index', $data);
     }
 

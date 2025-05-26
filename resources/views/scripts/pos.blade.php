@@ -5,9 +5,12 @@
         constructor() {
             // Configuration
             this.taxRate = {{ $business->tax->rate ?? 0 }};
+            this.usdToLbpRate = {{ $exchange_rate ?? 1 }};
+            this.systemCurrency = '{{ $currency->code }}';
+            this.systemCurrency = '{{ $currency->code }}';
             this.moneyFormat = new Intl.NumberFormat('en-US', {
                 style: 'currency',
-                currency: '{{ $currency->code }}',
+                currency: this.systemCurrency,
                 minimumFractionDigits: 2
             });
             this.ENCRYPTED_PASSWORD = {{ $encryptedPassword ?? 'null' }};
@@ -28,8 +31,13 @@
                 noteInput: document.getElementById('note'),
                 clientSelect: document.getElementById('client_id'),
                 amountPaidInput: document.getElementById('amountPaid'),
-                changeDueElement: document.getElementById('changeDue'),
-                modalGrandTotal: document.getElementById('modalGrandTotal'),
+                grandTotalUSD: document.getElementById('grandTotalUSD'),
+                grandTotalLBP: document.getElementById('grandTotalLBP'),
+                changeDueUSD: document.getElementById('changeDueUSD'),
+                changeDueLBP: document.getElementById('changeDueLBP'),
+                clearPaymentBtn: document.getElementById('payment-clear'),
+                usdNotesTab: document.querySelector('[href="#usd_notes"]'),
+                lbpNotesTab: document.querySelector('[href="#lbp_notes"]'),
                 productSearch: document.getElementById('product_search'),
                 discountInput: document.getElementById('discount_input'),
                 discountElement: document.querySelector('[data-kt-pos-element="discount"]'),
@@ -51,7 +59,7 @@
                 QUANTITY_DECREASE: '.quantity-decrease',
                 QUANTITY_INCREASE: '.quantity-increase',
                 DELETE_ITEM: '.delete-item',
-                BANK_NOTE_CARD: '.card.bg-primary'
+                BANK_NOTE_CARD: '.bank-note'
             };
 
             // Caching
@@ -103,7 +111,9 @@
             this.cachedElements.completeOrderBtn.addEventListener('click', (e) => this.handleCompleteOrder(e));
 
             // Payment handling
-            this.cachedElements.amountPaidInput.addEventListener('input', () => this.calculateChangeDue());
+            this.cachedElements.amountPaidInput.addEventListener('input', (e) => {
+                this.handleAmountPaidInput(e.target.value);
+            });
             this.cachedElements.confirmPaymentBtn.addEventListener('click', () => this.confirmPayment());
             this.cachedElements.clearPaymentBtn.addEventListener('click', () => this.clearPayment());
 
@@ -126,9 +136,17 @@
                 this.resetOrderForm();
             });
 
-            // Bank Note buttons
+            // Bank Notes Modal
             document.querySelectorAll(this.SELECTORS.BANK_NOTE_CARD).forEach(card => {
                 card.addEventListener('click', () => this.addBankNoteValue(card));
+            });
+            this.cachedElements.usdNotesTab.addEventListener('click', () => {
+                this.paymentCurrency = 'USD';
+                this.calculateChangeDue();
+            });
+            this.cachedElements.lbpNotesTab.addEventListener('click', () => {
+                this.paymentCurrency = 'LBP';
+                this.calculateChangeDue();
             });
 
             // Barcode Scanning
@@ -564,7 +582,9 @@
 
             if (this.orderItems.length > 0) {
                 this.calculateTotals();
-                this.cachedElements.modalGrandTotal.textContent = this.moneyFormat.format(this.grandTotal);
+
+                this.cachedElements.grandTotalUSD.textContent = `$${this.grandTotalUSD.toFixed(2)}`;
+                this.cachedElements.grandTotalLBP.textContent = `${Math.round(this.grandTotalLBP)} LBP`;
 
                 if (!this.paymentModal) {
                     this.paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
@@ -590,6 +610,9 @@
                 this.grandTotal = 0;
             }
 
+            this.grandTotalUSD = this.systemCurrency === 'USD' ? this.grandTotal : this.convertCurrency(this.grandTotal, 'LBP', 'USD');
+            this.grandTotalLBP = this.systemCurrency === 'LBP' ? this.grandTotal : this.convertCurrency(this.grandTotal, 'USD', 'LBP');
+
             this.updateTotalDisplay(subtotal, tax);
         }
 
@@ -610,10 +633,31 @@
         }
 
         calculateChangeDue() {
-            this.amountPaid = parseFloat(this.cachedElements.amountPaidInput.value) || 0;
-            this.changeDue = this.amountPaid - this.grandTotal;
-            this.cachedElements.changeDueElement.textContent =
-                this.moneyFormat.format(this.changeDue > 0 ? this.changeDue : 0);
+            const amountPaid = this.cachedElements.amountPaidInput.value;
+            const amountPaidNum = amountPaid ? parseFloat(amountPaid) : 0;
+
+            if (this.paymentCurrency === 'USD') {
+                this.amountPaid = amountPaidNum;
+                this.changeDue = this.amountPaid - this.grandTotalUSD;
+
+                this.cachedElements.changeDueUSD.textContent = `$${(this.changeDue).toFixed(2)}`;
+                this.cachedElements.changeDueLBP.textContent = `${Math.round(this.convertCurrency(this.changeDue, 'USD', 'LBP'))} LBP`;
+            } else {
+                this.amountPaid = amountPaidNum;
+                this.changeDue = this.amountPaid - this.grandTotalLBP;
+
+                this.cachedElements.changeDueLBP.textContent = `${Math.round(this.changeDue)} LBP`;
+                this.cachedElements.changeDueUSD.textContent = `$${(this.convertCurrency(this.changeDue, 'LBP', 'USD')).toFixed(2)}`;
+            }
+        }
+
+        handleAmountPaidInput(value) {
+            let cleanedValue = value.replace(/[^0-9.]/g, '');
+            if ((cleanedValue.match(/\./g) || []).length > 1) {
+                cleanedValue = cleanedValue.substring(0, cleanedValue.lastIndexOf('.'));
+            }
+            this.cachedElements.amountPaidInput.value = cleanedValue;
+            this.calculateChangeDue();
         }
 
         // Payment Processing
@@ -651,15 +695,23 @@
         }
 
         validatePayment() {
-            this.amountPaid = parseFloat(this.cachedElements.amountPaidInput.value) || 0;
+            const amountPaid = parseFloat(this.cachedElements.amountPaidInput.value) || 0;
 
             if (this.orderItems.length === 0) {
                 throw new Error("Please add items to your order before completing.");
             }
 
-            if (this.amountPaid < this.grandTotal) {
-                throw new Error("The amount paid is less than the grand total.");
+            if (this.paymentCurrency === 'USD') {
+                if (amountPaid < this.grandTotalUSD) {
+                    throw new Error("The amount paid is less than the grand total.");
+                }
+            } else {
+                if (amountPaid < this.grandTotalLBP) {
+                    throw new Error("The amount paid is less than the grand total.");
+                }
             }
+
+            this.paymentCurrency = this.paymentCurrency;
         }
 
         updateStockQuantities() {
@@ -681,12 +733,22 @@
             return {
                 orderItems: this.orderItems,
                 total: this.grandTotal,
+                totalUSD: this.systemCurrency === 'USD' ? this.grandTotal : this.convertCurrency(this.grandTotal, 'LBP', 'USD'),
+                totalLBP: this.systemCurrency === 'LBP' ? this.grandTotal : this.convertCurrency(this.grandTotal, 'USD', 'LBP'),
                 amountPaid: this.amountPaid,
+                amountPaidCurrency: this.paymentCurrency,
+                amountPaidUSD: this.paymentCurrency === 'USD' ? this.amountPaid : this.convertCurrency(this.amountPaid, 'LBP', 'USD'),
+                amountPaidLBP: this.paymentCurrency === 'LBP' ? this.amountPaid : this.convertCurrency(this.amountPaid, 'USD', 'LBP'),
                 changeDue: this.changeDue,
+                changeDueCurrency: this.paymentCurrency,
+                changeDueUSD: this.paymentCurrency === 'USD' ? this.changeDue : this.convertCurrency(this.changeDue, 'LBP', 'USD'),
+                changeDueLBP: this.paymentCurrency === 'LBP' ? this.changeDue : this.convertCurrency(this.changeDue, 'USD', 'LBP'),
                 note: this.cachedElements.noteInput.value,
                 cashier: '{{ ucwords(auth()->user()->name) }}',
                 orderNumber: this.orderNumber,
                 client_id: this.cachedElements.clientSelect.value,
+                systemCurrency: this.systemCurrency,
+                exchangeRate: this.usdToLbpRate
             };
         }
 
@@ -815,12 +877,31 @@
             });
         }
 
+        convertCurrency(amount, fromCurrency, toCurrency) {
+            if (fromCurrency === toCurrency) return amount;
+
+            if (fromCurrency === 'USD' && toCurrency === 'LBP') {
+                return amount * this.usdToLbpRate;
+            } else if (fromCurrency === 'LBP' && toCurrency === 'USD') {
+                return amount / this.usdToLbpRate;
+            }
+            return amount;
+        }
+
         resetOrderForm() {
             this.orderItems = [];
             this.updateOrderTable();
             this.cachedElements.noteInput.value = '';
-            this.cachedElements.amountPaidInput.value = '0';
-            this.cachedElements.changeDueElement.textContent = this.moneyFormat.format(0);
+
+            this.cachedElements.amountPaidInput.value = '';
+            this.amountPaid = 0;
+            this.changeDue = 0;
+            this.paymentCurrency = this.systemCurrency;
+
+            this.cachedElements.grandTotalUSD.textContent = '$0.00';
+            this.cachedElements.grandTotalLBP.textContent = '0 LBP';
+            this.cachedElements.changeDueUSD.textContent = '$0.00';
+            this.cachedElements.changeDueLBP.textContent = '0 LBP';
 
             this.cachedElements.clientSelect.value = '';
             if ($('#client_id').data('select2')) {
@@ -828,17 +909,41 @@
             }
 
             this.clearActiveOrder();
+
+            const usdTab = document.querySelector('[href="#usd_notes"]');
+            if (usdTab) {
+                new bootstrap.Tab(usdTab).show();
+            }
         }
 
         clearPayment() {
             this.cachedElements.amountPaidInput.value = '';
-            this.cachedElements.changeDueElement.textContent = this.moneyFormat.format(0);
+            this.amountPaid = 0;
+            this.changeDue = 0;
+            this.cachedElements.changeDueUSD.textContent = '$0.00';
+            this.cachedElements.changeDueLBP.textContent = '0 LBP';
+            this.paymentCurrency = this.systemCurrency;
         }
 
         addBankNoteValue(card) {
-            const bankNoteValue = parseFloat(card.querySelector('b').textContent.replace(/[^0-9.-]+/g, ""));
+            const tabContent = card.closest('.tab-pane');
+            const isUSDNote = tabContent && tabContent.id === 'usd_notes';
+
+            const valueText = card.querySelector('div:last-child').textContent;
+            const bankNoteValue = parseFloat(valueText.replace(/[^0-9.-]+/g, ""));
+
             const currentAmountPaid = parseFloat(this.cachedElements.amountPaidInput.value) || 0;
-            this.cachedElements.amountPaidInput.value = (currentAmountPaid + bankNoteValue).toFixed(2);
+
+            if (isUSDNote) {
+                this.cachedElements.amountPaidInput.value = (currentAmountPaid + bankNoteValue).toFixed(2);
+                this.paymentCurrency = 'USD';
+                this.cachedElements.usdNotesTab.click();
+            } else {
+                this.cachedElements.amountPaidInput.value = Math.round(currentAmountPaid + bankNoteValue);
+                this.paymentCurrency = 'LBP';
+                this.cachedElements.lbpNotesTab.click();
+            }
+
             this.calculateChangeDue();
         }
 
@@ -908,6 +1013,22 @@
         }
 
         getReceiptHtml(drawerKick) {
+            const formatLBP = (amount) => {
+                return Math.round(amount).toLocaleString() + ' L.L.';
+            };
+
+            const totalLBP = this.systemCurrency === 'USD'
+                ? this.convertCurrency(this.grandTotal, 'USD', 'LBP')
+                : this.grandTotal;
+
+            const amountPaidLBP = this.paymentCurrency === 'USD'
+                ? this.convertCurrency(this.amountPaid, 'USD', 'LBP')
+                : this.amountPaid;
+
+            const changeDueLBP = this.paymentCurrency === 'USD'
+                ? this.convertCurrency(this.changeDue, 'USD', 'LBP')
+                : this.changeDue;
+
             return `
                 <html>
                     <head>
@@ -919,6 +1040,10 @@
                                 .receipt-details, .receipt-footer { margin-top: 20px; }
                                 .text-right { text-align: right; }
                                 .text-center { text-align: center; }
+                                .dual-currency { display: flex; justify-content: space-between; }
+                                .currency-item { flex: 1; }
+                                .currency-label { font-size: 10px; color: #666; }
+                                hr { border-top: 1px dashed #ccc; }
                             }
                         </style>
                     </head>
@@ -928,10 +1053,11 @@
                             <h2>{{ ucwords($business->name) }}</h2>
                             <p>{{ $business->address }}</p>
                             <p>Date: ${new Date().toLocaleString()}</p>
+                            <p>Payment Currency: ${this.paymentCurrency}</p>
                         </div>
                         <hr>
                         <div class="receipt-details">
-                            <table>
+                            <table width="100%">
                                 ${this.orderItems.map(item => `
                                     <tr>
                                         <td>${item.name} x${item.quantity}</td>
@@ -942,18 +1068,45 @@
                         </div>
                         <hr>
                         <div class="receipt-footer">
-                            <table>
+                            <table width="100%">
                                 <tr>
                                     <td><strong>Total:</strong></td>
-                                    <td class="text-right">${this.moneyFormat.format(this.grandTotal)}</td>
+                                    <td class="text-right">
+                                        <div class="dual-currency">
+                                            <div class="currency-item">
+                                                ${this.moneyFormat.format(this.grandTotal)}
+                                            </div>
+                                            <div class="currency-item">
+                                                ${this.systemCurrency === 'USD' ? formatLBP(totalLBP) : '$' + this.convertCurrency(this.grandTotal, 'LBP', 'USD').toFixed(2)}
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><strong>Amount Paid:</strong></td>
-                                    <td class="text-right">${this.moneyFormat.format(this.amountPaid)}</td>
+                                    <td class="text-right">
+                                        <div class="dual-currency">
+                                            <div class="currency-item">
+                                                ${this.paymentCurrency === 'USD' ? '$' + this.amountPaid.toFixed(2) : formatLBP(this.amountPaid)}
+                                            </div>
+                                            <div class="currency-item">
+                                                ${this.paymentCurrency === 'USD' ? formatLBP(amountPaidLBP) : '$' + this.convertCurrency(this.amountPaid, 'LBP', 'USD').toFixed(2)}
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><strong>Change Due:</strong></td>
-                                    <td class="text-right">${this.moneyFormat.format(this.changeDue)}</td>
+                                    <td class="text-right">
+                                        <div class="dual-currency">
+                                            <div class="currency-item">
+                                                ${this.paymentCurrency === 'USD' ? '$' + (this.changeDue > 0 ? this.changeDue.toFixed(2) : '0.00') : formatLBP(this.changeDue > 0 ? this.changeDue : 0)}
+                                            </div>
+                                            <div class="currency-item">
+                                                ${this.paymentCurrency === 'USD' ? formatLBP(changeDueLBP > 0 ? changeDueLBP : 0) : '$' + (this.convertCurrency(this.changeDue, 'LBP', 'USD') > 0 ? this.convertCurrency(this.changeDue, 'LBP', 'USD').toFixed(2) : '0.00')}
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                         </div>

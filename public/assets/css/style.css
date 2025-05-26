@@ -124,6 +124,25 @@ table thead tr th {
     margin-bottom: 10px;
 }
 
+.bank-note {
+    border: 2px solid var(--primary);
+    color: black;
+}
+
+.bank-note:hover {
+    background-color: var(--light-primary);
+    color: white;
+}
+
+.bg-custom-1 {
+    background-color: var(--light-primary);
+    color: white;
+}
+.bg-custom-2 {
+    background-color: var(--primary);
+    color: white;
+}
+
 .bank-note:hover,
 .product-item:hover {
     cursor: pointer;

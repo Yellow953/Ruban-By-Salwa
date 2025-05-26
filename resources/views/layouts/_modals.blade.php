@@ -306,6 +306,7 @@
 </div>
 <!--end::Modal - New Report-->
 
+{{--
 <!--begin::Modal - Payment-->
 <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -345,6 +346,101 @@
             <div class="modal-footer">
                 <button type="button" id="confirmPayment" class="btn btn-primary">Confirm Payment</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end::Modal - Payment--> --}}
+<!--begin::Modal - Payment-->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complete Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Amount Paid Input with Clear Button -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <label for="amountPaid" class="form-label mb-0">Amount Paid</label>
+                        <button type="button" class="btn btn-sm btn-danger" id="payment-clear">
+                            <i class="fas fa-times me-1"></i> Clear
+                        </button>
+                    </div>
+                    <input type="number" class="form-control form-control-lg" id="amountPaid"
+                        placeholder="Enter amount">
+                </div>
+
+                <!-- Currency Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <div class="card bg-custom-1">
+                            <div class="card-body">
+                                <h6 class="card-title">Grand Total</h6>
+                                <div class="text-right">
+                                    <div class="fs-3 fw-bold text-success" id="grandTotalUSD">$0.00</div>
+                                    <div class="fs-5" id="grandTotalLBP">0 LBP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-custom-2">
+                            <div class="card-body">
+                                <h6 class="card-title">Change Due</h6>
+                                <div class="text-right">
+                                    <div class="fs-3 fw-bold text-success" id="changeDueUSD">$0.00</div>
+                                    <div class="fs-5" id="changeDueLBP">0 LBP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cash Notes Tabs -->
+                <ul class="nav nav-tabs nav-line-tabs mb-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#usd_notes">USD Notes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#lbp_notes">LBP Notes</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <!-- USD Notes -->
+                    <div class="tab-pane fade show active" id="usd_notes">
+                        <div class="row g-3">
+                            @foreach ($bank_notes->where('currency_code', 'USD') as $bank_note)
+                            <div class="col-4">
+                                <div class="card text-center p-3 bank-note" style="cursor: pointer;">
+                                    <div class="fw-bold">{{ $bank_note->name }}</div>
+                                    <div>${{ number_format($bank_note->value, 2) }}</div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- LBP Notes -->
+                    <div class="tab-pane fade" id="lbp_notes">
+                        <div class="row g-3">
+                            @foreach ($bank_notes->where('currency_code', 'LBP') as $bank_note)
+                            <div class="col-4">
+                                <div class="card text-center p-3 bank-note" style="cursor: pointer;">
+                                    <div class="fw-bold">{{ $bank_note->name }}</div>
+                                    <div>{{ number_format($bank_note->value) }} L.L.</div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmPayment" class="btn btn-primary">Confirm Payment</button>
             </div>
         </div>
     </div>
