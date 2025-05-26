@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\Facades\Image;
 
 class PurchaseController extends Controller
 {
@@ -24,7 +25,7 @@ class PurchaseController extends Controller
 
     public function new()
     {
-        $products = Product::select('id', 'name')->get();
+        $products = Product::select('id', 'name')->with('barcodes')->get();
 
         $data = compact('products');
         return view('purchases.new', $data);
@@ -45,6 +46,20 @@ class PurchaseController extends Controller
         DB::beginTransaction();
 
         try {
+            $path = null;
+
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $ext = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $ext;
+                $image = Image::make($file);
+                $image->fit(300, 300, function ($constraint) {
+                    $constraint->upsize();
+                });
+                $image->save(public_path('uploads/purchases/' . $filename));
+                $path = '/uploads/purchases/' . $filename;
+            }
+
             $purchase = Purchase::create([
                 'number' => Purchase::generate_number(),
                 'currency_id' => auth()->user()->currency_id,
@@ -52,6 +67,7 @@ class PurchaseController extends Controller
                 'invoice_number' => $request->invoice_number,
                 'notes' => $request->notes,
                 'total' => 0,
+                'image' => $path,
             ]);
 
             $total = 0;
@@ -96,7 +112,7 @@ class PurchaseController extends Controller
 
     public function edit(Purchase $purchase)
     {
-        $products = Product::select('id', 'name')->get();
+        $products = Product::select('id', 'name')->with('barcodes')->get();
 
         $data = compact('purchase', 'products');
         return view('purchases.edit', $data);
@@ -118,6 +134,7 @@ class PurchaseController extends Controller
 
         try {
             $total = 0;
+            $path = $purchase->image;
 
             if ($request->filled('items')) {
                 foreach ($request->items as $item) {
@@ -140,11 +157,24 @@ class PurchaseController extends Controller
                 $total = $purchase->total;
             }
 
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $ext = $file->getClientOriginalExtension();
+                $filename = time() . '.' . $ext;
+                $image = Image::make($file);
+                $image->fit(300, 300, function ($constraint) {
+                    $constraint->upsize();
+                });
+                $image->save(public_path('uploads/purchases/' . $filename));
+                $path = '/uploads/purchases/' . $filename;
+            }
+
             $purchase->update([
                 'purchase_date' => $request->purchase_date,
                 'invoice_number' => $request->invoice_number,
                 'notes' => $request->notes,
                 'total' => $total,
+                'image' => $path,
             ]);
 
             Log::create([

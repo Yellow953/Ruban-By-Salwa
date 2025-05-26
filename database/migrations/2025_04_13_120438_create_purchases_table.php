@@ -16,6 +16,7 @@ return new class extends Migration
             $table->double('total')->default(0);
             $table->string('invoice_number')->nullable();
             $table->text('notes')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
 
             $table->foreign('currency_id')->references('id')->on('currencies');

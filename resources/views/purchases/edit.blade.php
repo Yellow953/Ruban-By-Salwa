@@ -23,7 +23,7 @@
                 <h2 class="text-center text-primary my-4">Products</h2>
 
                 <div class="d-flex p-4 mb-4">
-                    <input type="text" id="searchInput" name="search" placeholder="Search Product ..."
+                    <input type="text" id="searchInput" name="search" placeholder="Search By Name or Barcode ..."
                         class="form-control me-2">
                     <button type="submit" id="searchBtn" class="btn btn-sm btn-primary px-4 ms-2">
                         <i class="fa fa-search"></i>
@@ -33,9 +33,15 @@
                 <div id="no-results" class="text-muted text-center d-none">No matching products found.</div>
                 <div id="products" class="px-5 max-h-400px">
                     @foreach ($products as $product)
-                    <div class="product-row row" data-name="{{ strtolower($product->name) }}">
+                    <div class="product-row row" data-name="{{ strtolower($product->name) }}"
+                        data-barcodes="{{ $product->barcodes->pluck('barcode') }}">
                         <div class="col-9 pb-2 my-auto">
-                            {{ $product->name }}
+                            {{ $product->name }} <br>
+                            @foreach ($product->barcodes->pluck('barcode') as $index => $barcode)
+                            {{ $index == 0 ? "(" : "" }}
+                            {{ $barcode }} {{ $index != ($product->barcodes->count() - 1) ? " , " : "" }}
+                            {{ $index == ($product->barcodes->count() - 1) ? ")" : "" }}
+                            @endforeach
                         </div>
                         <div class="col-3 pb-2 my-auto text-end">
                             <button class="btn btn-sm btn-success px-4"
@@ -77,11 +83,63 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="notes" class="col-form-label">Notes</label>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="notes" class="col-form-label">Notes</label>
 
-                        <textarea id="notes" placeholder="Enter any Notes" rows="3" class="form-control"
-                            name="notes">{{ $purchase->notes }}</textarea>
+                                <textarea id="notes" placeholder="Enter any Notes" rows="3" class="form-control"
+                                    name="notes">{{ $purchase->notes }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group row">
+                                <label class="col-4 form-label">Image</label>
+                                <div class="col-8">
+                                    <!--begin::Image input-->
+                                    <div class="image-input image-input-empty" data-kt-image-input="true">
+                                        <!--begin::Image preview wrapper-->
+                                        <div class="image-input-wrapper w-100px h-100px"
+                                            style="background-image: url({{ asset($purchase->image ?? 'assets/images/no_img.png') }})">
+                                        </div>
+                                        <!--end::Image preview wrapper-->
+
+                                        <!--begin::Edit button-->
+                                        <label
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                            data-bs-dismiss="click" title="Change image">
+                                            <i class="fa fa-pen"></i>
+
+                                            <!--begin::Inputs-->
+                                            <input type="file" name="image" accept=".png, .jpg, .jpeg" />
+                                            <input type="hidden" name="avatar_remove" />
+                                            <!--end::Inputs-->
+                                        </label>
+                                        <!--end::Edit button-->
+
+                                        <!--begin::Cancel button-->
+                                        <span
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                            data-bs-dismiss="click" title="Remove image">
+                                            <i class="fa fa-close"></i>
+                                        </span>
+                                        <!--end::Cancel button-->
+
+                                        <!--begin::Remove button-->
+                                        <span
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                            data-bs-dismiss="click" title="Remove image">
+                                            <i class="fa fa-close"></i>
+                                        </span>
+                                        <!--end::Remove button-->
+                                    </div>
+                                    <!--end::Image input-->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -175,16 +233,22 @@
         });
     }
 
-    document.getElementById('searchInput').addEventListener('input', function () {
+    document.getElementById('searchInput').addEventListener('input', function() {
         const query = this.value.trim().toLowerCase();
         const productRows = document.querySelectorAll('.product-row');
         let visibleCount = 0;
 
         productRows.forEach(row => {
             const name = row.getAttribute('data-name');
-            const match = name.includes(query);
-            row.style.display = match ? 'flex' : 'none';
-            if (match) visibleCount++;
+            const barcodes = JSON.parse(row.getAttribute('data-barcodes') || '[]');
+
+            const nameMatch = name.includes(query);
+            const barcodeMatch = barcodes.some(barcode =>
+                barcode.toLowerCase().includes(query)
+            );
+
+            row.style.display = (nameMatch || barcodeMatch) ? 'flex' : 'none';
+            if (nameMatch || barcodeMatch) visibleCount++;
         });
 
         document.getElementById('no-results').classList.toggle('d-none', visibleCount > 0);

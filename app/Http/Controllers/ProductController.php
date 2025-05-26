@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ProductsExport;
-use App\Models\Barcode;
 use App\Models\Category;
 use App\Models\Log;
 use App\Models\Product;
