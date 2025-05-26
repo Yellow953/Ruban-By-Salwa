@@ -60,6 +60,10 @@ class AppController extends Controller
                 'total' => $request->grand_total,
                 'products_count' => count(json_decode($request->order_items, true)),
                 'note' => $request->note ?? null,
+                'exchange_rate' => $request->exchange_rate,
+                'payment_currency' => $request->payment_currency,
+                'amount_paid' => $request->amount_paid,
+                'change_due' => $request->change_due,
             ]);
 
             $text .= 'User ' . ucwords(auth()->user()->name) . ' created Order NO: ' . $order->order_number . " of Sub Total: {$request->total}, tax: {$request->tax}, discount: {$request->discount}, Total: {$request->grand_total}";
@@ -138,6 +142,10 @@ class AppController extends Controller
                 'total' => $request->total,
                 'products_count' => count($request->orderItems),
                 'note' => $request->note,
+                'exchange_rate' => $request->exchangeRate,
+                'payment_currency' => $request->paymentCurrency,
+                'amount_paid' => $request->amountPaid,
+                'change_due' => $request->changeDue,
             ]);
             $text .= 'User ' . ucwords(auth()->user()->name) . ' created Order NO: ' . $order->order_number . " of Sub Total: {$request->total}, tax: {$tax}, discount: {$discount}, Total: {$request->grand_total}";
 

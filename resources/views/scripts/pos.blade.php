@@ -747,13 +747,18 @@
                 cashier: '{{ ucwords(auth()->user()->name) }}',
                 orderNumber: this.orderNumber,
                 client_id: this.cachedElements.clientSelect.value,
-                systemCurrency: this.systemCurrency,
+                paymentCurrency: this.paymentCurrency,
                 exchangeRate: this.usdToLbpRate
             };
         }
 
         async submitOrderToServer(orderData) {
             const formData = new FormData(this.cachedElements.form);
+
+            formData.append('amount_paid', Math.round(orderData.amountPaid));
+            formData.append('change_due', Math.round(orderData.changeDue));
+            formData.append('payment_currency', orderData.paymentCurrency);
+            formData.append('exchange_rate', orderData.exchangeRate);
 
             const response = await fetch(this.cachedElements.form.action, {
                 method: 'POST',

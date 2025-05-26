@@ -69,7 +69,7 @@
 
     <!--begin::Submit button-->
     <div class="d-grid mb-5">
-        <button type="submit" id="kt_sign_in_submit" class="btn error-btn indicator-label-custom">
+        <button type="submit" id="kt_sign_in_submit" class="btn btn-primary error-btn indicator-label-custom">
             <!--begin::Indicator label-->
             <span class="indicator-label text-white">Sign In</span>
             <!--end::Indicator label-->
