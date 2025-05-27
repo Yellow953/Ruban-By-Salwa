@@ -59,9 +59,9 @@
             <tr>
                 <td>{{ $report->id }}</td>
                 <td>
-                    {{ $report->start_datetime->format('Y-m-d H:i') }}<br>
+                    {{ $report->start_datetime }}<br>
                     to<br>
-                    {{ $report->end_datetime->format('Y-m-d H:i') }}
+                    {{ $report->end_datetime }}
                 </td>
                 <td>{{ $report->user->name }}</td>
                 <td class="text-right">{{ $report->transaction_count }}</td>

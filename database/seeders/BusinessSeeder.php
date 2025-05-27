@@ -12,9 +12,9 @@ class BusinessSeeder extends Seeder
         $businesses = [
             [
                 'name' => 'Ruban By Salwa',
-                'phone' => '+96170285659',
-                'address' => 'Lebanon, Beirut, Dora',
-                'email' => 'yellow.tech.953@gmail.com',
+                'phone' => '+9613394873',
+                'address' => 'Msharafiye, jnah, haret hreik',
+                'email' => 'contact@ruban.com',
                 'logo' => 'assets/images/logo.png',
                 'tax_id' => 1,
                 'created_at' => now(),

@@ -123,11 +123,11 @@
                     <!--begin::Table head-->
                     <thead>
                         <tr class="text-center">
-                            <th class="col-4 p-3">Order</th>
+                            <th class="col-1 p-3">Order</th>
                             <th class="col-2 p-3">User</th>
                             <th class="col-2 p-3">Amount</th>
                             <th class="col-2 p-3">Products</th>
-                            <th class="col-2 p-3">Actions</th>
+                            <th class="col-1 p-3">Actions</th>
                         </tr>
                     </thead>
                     <!--end::Table head-->

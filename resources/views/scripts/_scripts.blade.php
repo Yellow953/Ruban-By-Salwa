@@ -1,5 +1,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Logs drawer
         const drawerToggle = document.getElementById('kt_activities_toggle');
         const timelineContainer = document.getElementById('kt_activities_timeline');
 
@@ -49,17 +50,16 @@
         }
 
         drawerToggle.addEventListener('click', fetchLogs);
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const drawerToggle = document.getElementById('kt_notifications_toggle');
-        const timelineContainer = document.getElementById('kt_notifications_timeline');
+        // Notification drawer
+        const drawerToggle1 = document.getElementById('kt_notifications_toggle');
+        const timelineContainer1 = document.getElementById('kt_notifications_timeline');
 
         function fetchNotifications() {
             fetch("{{ route('notifications.fetch') }}")
                 .then(response => response.json())
                 .then(data => {
-                    timelineContainer.innerHTML = '';
+                    timelineContainer1.innerHTML = '';
 
                     if (data.notifications.length > 0) {
                         data.notifications.forEach(notification => {
@@ -85,13 +85,13 @@
                                 </div>
                             `;
 
-                            timelineContainer.appendChild(timelineItem);
+                            timelineContainer1.appendChild(timelineItem);
                         });
                     } else {
                         const noNotificationsMessage = document.createElement('div');
                         noNotificationsMessage.classList.add('text-center', 'text-muted', 'my-5');
                         noNotificationsMessage.textContent = 'No notifications available';
-                        timelineContainer.appendChild(noNotificationsMessage);
+                        timelineContainer1.appendChild(noNotificationsMessage);
                     }
                 })
                 .catch(error => {
@@ -99,11 +99,9 @@
                 });
         }
 
-        drawerToggle.addEventListener('click', fetchNotifications);
-    });
+        drawerToggle1.addEventListener('click', fetchNotifications);
 
-    // start typeahead
-    document.addEventListener('DOMContentLoaded', function() {
+        // Typeahead Routes
         var routes = <?php echo json_encode(Helper::get_route_names()); ?>;
 
         var routes = new Bloodhound({
@@ -126,135 +124,131 @@
             $('#redirectForm input[name="route"]').val(suggestion);
             $('#redirectForm').submit();
         });
-    });
-    // end typeahead
 
-// start todo
-document.addEventListener('DOMContentLoaded', function() {
-    const drawerToggle = document.getElementById('kt_todos_toggle');
-    const todoContainer = document.getElementById('todo_container');
-    const inputBox = document.getElementById("todo_input");
-    const form = document.getElementById("todo_form");
+        // Todo drawer
+        const drawerToggle2 = document.getElementById('kt_todos_toggle');
+        const todoContainer = document.getElementById('todo_container');
+        const inputBox = document.getElementById("todo_input");
+        const form = document.getElementById("todo_form");
 
-    function addTask() {
-        const taskText = inputBox.value.trim();
+        function addTask() {
+            const taskText = inputBox.value.trim();
 
-        if (taskText === '') {
-            alert("You must write something!");
-            return;
-        }
-
-        fetch("{{ route('todos.create') }}", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ text: taskText })
-        })
-        .then(response => response.json())
-        .then(data => {
-            let li = document.createElement("li");
-            li.setAttribute('data-id', data.id);
-            li.innerHTML = `
-                ${data.text}
-                <span class="remove-todo">x</span>
-            `;
-            if (data.status == 'completed') {
-                li.classList.add('checked');
+            if (taskText === '') {
+                alert("You must write something!");
+                return;
             }
 
-            todoContainer.insertBefore(li, todoContainer.firstChild);
-
-            inputBox.value = '';
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function removeTask(id, listItem) {
-        const url = `{{ url('/todos/delete', '') }}/${id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                listItem.remove();
-            } else {
-                console.error('Failed to delete task');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function toggleComplete(id, listItem) {
-        const url = `{{ url('/todos/complete', '') }}/${id}`;
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                listItem.classList.toggle('checked');
-            } else {
-                console.error('Failed to toggle completion');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function fetchTodos() {
-        fetch("{{ route('todos.fetch') }}")
+            fetch("{{ route('todos.create') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: taskText })
+            })
             .then(response => response.json())
             .then(data => {
-                todoContainer.innerHTML = '';
+                let li = document.createElement("li");
+                li.setAttribute('data-id', data.id);
+                li.innerHTML = `
+                    ${data.text}
+                    <span class="remove-todo">x</span>
+                `;
+                if (data.status == 'completed') {
+                    li.classList.add('checked');
+                }
 
-                if (data.todos.length > 0) {
-                    data.todos.forEach(todo => {
-                        const li = document.createElement('li');
-                        li.setAttribute('data-id', todo.id);
-                        li.innerHTML = `
-                            ${todo.text}
-                            <span class="remove-todo">x</span>
-                        `;
-                        if (todo.status == 'completed') {
-                            li.classList.add('checked');
-                        }
-                        todoContainer.insertBefore(li, todoContainer.firstChild);
-                    });
-                } else {
-                    const noTodosMessage = document.createElement('div');
-                    noTodosMessage.classList.add('text-center', 'text-muted', 'my-5');
-                    noTodosMessage.textContent = 'No Todos available';
-                    todoContainer.appendChild(noTodosMessage);
+                todoContainer.insertBefore(li, todoContainer.firstChild);
+
+                inputBox.value = '';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function removeTask(id, listItem) {
+            const url = `{{ url('/todos/delete', '') }}/${id}`;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 }
             })
-            .catch(error => {
-                console.error('Error fetching todos:', error);
-            });
-    }
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        addTask();
-    });
-
-    todoContainer.addEventListener("click", function(e) {
-        if (e.target.classList.contains("remove-todo")) {
-            const todoId = e.target.parentElement.getAttribute('data-id');
-            removeTask(todoId, e.target.parentElement);
-        } else if (e.target.tagName === "LI") {
-            const todoId = e.target.getAttribute('data-id');
-            toggleComplete(todoId, e.target);
+            .then(response => {
+                if (response.ok) {
+                    listItem.remove();
+                } else {
+                    console.error('Failed to delete task');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
-    });
 
-    drawerToggle.addEventListener('click', fetchTodos);
-});
-// end todo
+        function toggleComplete(id, listItem) {
+            const url = `{{ url('/todos/complete', '') }}/${id}`;
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    listItem.classList.toggle('checked');
+                } else {
+                    console.error('Failed to toggle completion');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function fetchTodos() {
+            fetch("{{ route('todos.fetch') }}")
+                .then(response => response.json())
+                .then(data => {
+                    todoContainer.innerHTML = '';
+
+                    if (data.todos.length > 0) {
+                        data.todos.forEach(todo => {
+                            const li = document.createElement('li');
+                            li.setAttribute('data-id', todo.id);
+                            li.innerHTML = `
+                                ${todo.text}
+                                <span class="remove-todo">x</span>
+                            `;
+                            if (todo.status == 'completed') {
+                                li.classList.add('checked');
+                            }
+                            todoContainer.insertBefore(li, todoContainer.firstChild);
+                        });
+                    } else {
+                        const noTodosMessage = document.createElement('div');
+                        noTodosMessage.classList.add('text-center', 'text-muted', 'my-5');
+                        noTodosMessage.textContent = 'No Todos available';
+                        todoContainer.appendChild(noTodosMessage);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching todos:', error);
+                });
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            addTask();
+        });
+
+        todoContainer.addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-todo")) {
+                const todoId = e.target.parentElement.getAttribute('data-id');
+                removeTask(todoId, e.target.parentElement);
+            } else if (e.target.tagName === "LI") {
+                const todoId = e.target.getAttribute('data-id');
+                toggleComplete(todoId, e.target);
+            }
+        });
+
+        drawerToggle2.addEventListener('click', fetchTodos);
+    });
 </script>

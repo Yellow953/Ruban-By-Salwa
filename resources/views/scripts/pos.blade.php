@@ -748,7 +748,7 @@
                 orderNumber: this.orderNumber,
                 client_id: this.cachedElements.clientSelect.value,
                 paymentCurrency: this.paymentCurrency,
-                exchangeRate: this.usdToLbpRate
+                exchangeRate: this.paymentCurrency == 'USD' ? 1 : this.usdToLbpRate
             };
         }
 

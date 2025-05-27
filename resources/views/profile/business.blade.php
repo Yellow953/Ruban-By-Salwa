@@ -60,18 +60,6 @@
                                     <!--end::Name-->
                                     <!--begin::Info-->
                                     <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2 gap-4">
-                                        <a href="mailto:{{ $business->email }}"
-                                            class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
-                                            <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
-                                            <span class="svg-icon svg-icon-4 me-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->{{ $business->email }}
-                                        </a>
                                         <a href="tel:{{ $business->phone }}"
                                             class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
                                             <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
@@ -85,35 +73,6 @@
                                             </span>
                                             <!--end::Svg Icon-->{{ $business->phone }}
                                         </a>
-                                        @if ($business->website)
-                                        <a href="{{ $business->website }}" target="_blank"
-                                            class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
-                                            <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
-                                            <span class="svg-icon svg-icon-4 me-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-browser-chrome"
-                                                    viewBox="0 0 16 16">
-                                                    <path fill-rule="evenodd"
-                                                        d="M16 8a8 8 0 0 1-7.022 7.94l1.902-7.098a3 3 0 0 0 .05-1.492A3 3 0 0 0 10.237 6h5.511A8 8 0 0 1 16 8M0 8a8 8 0 0 0 7.927 8l1.426-5.321a3 3 0 0 1-.723.255 3 3 0 0 1-1.743-.147 3 3 0 0 1-1.043-.7L.633 4.876A8 8 0 0 0 0 8m5.004-.167L1.108 3.936A8.003 8.003 0 0 1 15.418 5H8.066a3 3 0 0 0-1.252.243 2.99 2.99 0 0 0-1.81 2.59M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->{{ ucwords($business->name) }}
-                                        </a>
-                                        @endif
-                                        @if ($business->google_maps_link)
-                                        <a href="{{ $business->google_maps_link }}" target="_blank"
-                                            class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
-                                            <!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
-                                            <span class="svg-icon svg-icon-4 me-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-                                                </svg>
-                                            </span>
-                                            <!--end::Svg Icon-->Google Maps
-                                        </a>
-                                        @endif
                                     </div>
                                     <!--end::Info-->
                                 </div>
@@ -261,10 +220,6 @@
                                 <span>{{ $business->name }}</span>
                             </div>
                             <div class="user-info-item d-flex justify-content-between align-items-center">
-                                <span class="fw-bold">Email:</span>
-                                <span>{{ $business->email }}</span>
-                            </div>
-                            <div class="user-info-item d-flex justify-content-between align-items-center">
                                 <span class="fw-bold">Phone Number:</span>
                                 <span>{{ $business->phone }}</span>
                             </div>
@@ -310,20 +265,11 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="required form-label">Email</label>
-                                        <input type="email" class="form-control" name="email"
-                                            value="{{ $business->email }}" required />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
                                         <label class="required form-label">Phone Number</label>
                                         <input type="tel" class="form-control" name="phone"
                                             value="{{ $business->phone }}" required />
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="required form-label">Address</label>
@@ -331,7 +277,10 @@
                                             value="{{ $business->address }}" required />
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row mb-3">
+
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-4 form-label">Logo</label>
                                         <div class="col-8">

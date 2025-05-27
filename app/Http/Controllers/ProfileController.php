@@ -120,10 +120,8 @@ class ProfileController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email',
             'phone' => 'required',
             'address' => 'required',
-            'website' => 'nullable|max:255'
         ]);
 
         $business = Business::firstOrFail();
@@ -144,10 +142,8 @@ class ProfileController extends Controller
 
         $business->update([
             'name' => $request->name,
-            'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
-            'website' => $request->website,
             'logo' => $path,
             'tax_id' => $request->tax_id,
         ]);

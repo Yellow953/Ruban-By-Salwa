@@ -6,6 +6,7 @@ use App\Models\Log;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Exports\PurchasesExport;
+use App\Models\Business;
 use App\Models\PurchaseItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -106,7 +107,7 @@ class PurchaseController extends Controller
 
     public function show(Purchase $purchase)
     {
-        $business = auth()->user()->business;
+        $business = Business::firstOrFail();
         return view('purchases.show', compact('purchase', 'business'));
     }
 

@@ -205,9 +205,11 @@
                         Cash <br>
                         Drawer
                     </a>
-                    <a href="#" id="z_report" class="btn btn-primary text-center mb-0 mb-md-4 mx-2 mx-md-0 p-3 p-md-4">
-                        Z <br>
-                        Report
+                    <a href="#" id="z_report" class="btn btn-primary text-center mb-0 mb-md-4 mx-2 mx-md-0 p-3 p-md-4"
+                        onclick="generateZReport()">
+                        <span id="z_report_text">Z <br> Report</span>
+                        <span id="z_report_loading" class="spinner-border spinner-border-sm d-none"
+                            role="status"></span>
                     </a>
                 </div>
             </div>
@@ -219,4 +221,5 @@
 
 @section('scripts')
 @include('scripts.pos')
+@include('scripts._reports')
 @endsection

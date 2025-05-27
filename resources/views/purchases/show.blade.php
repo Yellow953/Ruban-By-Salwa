@@ -132,7 +132,6 @@
                                             <!--begin::Text-->
                                             <div class="text-sm-end fw-semibold fs-4 mt-7">
                                                 <div class="text-dark">Ruban By Salwa</div>
-                                                <div>{{ $business->email }}</div>
                                                 <div>{{ $business->phone }}</div>
                                                 <div>{{ $business->address }}</div>
                                             </div>

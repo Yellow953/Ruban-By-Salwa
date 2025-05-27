@@ -133,36 +133,45 @@
                             </td>
                             <td>
                                 <div class="d-flex flex-column">
-                                    <span class="text-muted fs-8">From</span>
-                                    <span class="text-dark fw-bold fs-7">{{ $report->start_datetime->format('Y-m-d H:i')
+                                    <span><b>From:</b> <br> {{ $report->start_datetime
                                         }}</span>
-                                    <span class="text-muted fs-8">To</span>
-                                    <span class="text-dark fw-bold fs-7">{{ $report->end_datetime->format('Y-m-d H:i')
+                                    <span><b>To:</b> <br> {{ $report->end_datetime
                                         }}</span>
                                 </div>
                             </td>
                             <td>
-                                <span class="text-dark fw-bold d-block fs-7">{{ $report->user->name }}</span>
-                                <span class="text-muted fs-8">{{ $report->created_at->format('Y-m-d H:i') }}</span>
+                                <span class="text-dark fw-bold d-block fs-7">{{ ucwords($report->user->name) }}</span>
                             </td>
                             <td>
                                 <span class="badge badge-light-primary fs-7">{{ $report->transaction_count }}</span>
                             </td>
                             <td>
                                 <div class="d-flex flex-column">
-                                    <span class="text-success fw-bold fs-7">
-                                        {{ number_format($report->total_sales, 2) }} {{ $report->currency->symbol }}
-                                    </span>
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <span class="text-muted fs-8">Sales:</span>
+                                        <span class="text-success fw-bold fs-7">
+                                            {{ $report->currency->symbol }}
+                                            {{ number_format($report->total_sales * $report->currency->rate, 2) }}
+                                        </span>
+                                    </div>
                                     <div class="d-flex justify-content-center gap-1">
                                         <span class="text-muted fs-8">Tax:</span>
                                         <span class="text-danger fs-8">
-                                            {{ number_format($report->total_tax, 2) }}
+                                            {{ $report->currency->symbol }}
+                                            {{ number_format($report->total_tax * $report->currency->rate, 2) }}
+                                        </span>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <span class="text-muted fs-8">Discount:</span>
+                                        <span class="text-danger fs-8">
+                                            {{ $report->currency->symbol }}
+                                            {{ number_format($report->total_discounts * $report->currency->rate, 2) }}
                                         </span>
                                     </div>
                                     <div class="d-flex justify-content-center gap-1">
                                         <span class="text-muted fs-8">Cash:</span>
                                         <span class="text-primary fs-8">
-                                            {{ number_format($report->cash_amount, 2) }}
+                                            {{ number_format($report->cash_amount * $report->currency->rate, 2) }}
                                         </span>
                                     </div>
                                 </div>
