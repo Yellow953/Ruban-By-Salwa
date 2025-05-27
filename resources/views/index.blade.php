@@ -187,15 +187,6 @@
                         </svg> <br>
                         Debt
                     </a>
-                    <a href="#" class="btn btn-primary text-center mb-0 mb-md-4 mx-2 mx-md-0 p-3 p-md-4 rotate-90"
-                        data-bs-toggle="modal" data-bs-target="#kt_modal_new_report">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-plus-lg" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                        </svg> <br>
-                        Report
-                    </a>
                     <a href="#" class="btn btn-primary text-center mb-0 mb-md-4 mx-2 mx-md-0 py-6"
                         data-bs-toggle="modal" data-bs-target="#kt_modal_calculator">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -213,6 +204,10 @@
                         class="btn btn-primary text-center mb-0 mb-md-4 mx-2 mx-md-0 p-3 p-md-4">
                         Cash <br>
                         Drawer
+                    </a>
+                    <a href="#" id="z_report" class="btn btn-primary text-center mb-0 mb-md-4 mx-2 mx-md-0 p-3 p-md-4">
+                        Z <br>
+                        Report
                     </a>
                 </div>
             </div>

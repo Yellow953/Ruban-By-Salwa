@@ -110,14 +110,9 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('reports')->group(function () {
             Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
             Route::get('/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
-            Route::get('/new', [ReportController::class, 'new'])->name('reports.new');
             Route::post('/create', [ReportController::class, 'create'])->name('reports.create');
-            Route::get('/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
-            Route::post('/{report}/update', [ReportController::class, 'update'])->name('reports.update');
             Route::get('/{report}/delete', [ReportController::class, 'destroy'])->name('reports.destroy');
-            Route::get('/data', [ReportController::class, 'data'])->name('reports.data');
-            Route::get('/sales', [ReportController::class, 'sales'])->name('reports.sales');
-            Route::get('/{date}/show', [ReportController::class, 'show'])->name('reports.show');
+            Route::get('/{report}/show', [ReportController::class, 'show'])->name('reports.show');
             Route::get('/', [ReportController::class, 'index'])->name('reports');
         });
 

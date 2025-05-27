@@ -18,15 +18,20 @@ class ReportsExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        return Report::with('currency')->filter()->get();
+        return Report::with('currency', 'user')->filter()->get();
     }
 
     public function headings(): array
     {
         return [
-            'Date',
-            'Start Cash',
-            'End Cash',
+            'User',
+            'Start Datetime',
+            'End Datetime',
+            'Total Sales',
+            'Total Tax',
+            'Total Discounts',
+            'Cash Amount',
+            'Transaction Count',
             'Currency',
             'Created At',
         ];
@@ -35,10 +40,15 @@ class ReportsExport implements FromCollection, WithHeadings, WithMapping
     public function map($row): array
     {
         return [
-            $row->date,
-            $row->start_cash,
-            $row->end_cash,
-            $row->currency_code,
+            $row->user->name,
+            $row->start_datetime,
+            $row->end_datetime,
+            $row->total_sales,
+            $row->total_tax,
+            $row->total_discounts,
+            $row->cash_amount,
+            $row->transaction_count,
+            $row->currency->code,
             $row->created_at,
         ];
     }

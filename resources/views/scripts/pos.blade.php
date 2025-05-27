@@ -1055,7 +1055,7 @@
                     <body>
                         <pre>${drawerKick}</pre>
                         <div class="receipt-header">
-                            <h2>{{ ucwords($business->name) }}</h2>
+                            <h2>Ruban By Salwa</h2>
                             <p>{{ $business->address }}</p>
                             <p>Date: ${new Date().toLocaleString()}</p>
                             <p>Payment Currency: ${this.paymentCurrency}</p>

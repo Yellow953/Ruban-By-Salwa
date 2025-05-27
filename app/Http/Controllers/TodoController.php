@@ -10,7 +10,7 @@ class TodoController extends Controller
 {
     public function fetch()
     {
-        $todos = Todo::select('id', 'text', 'status')->where('user_id', auth()->user()->id)->orderBy('created_at', 'DESC')->get();
+        $todos = Todo::select('id', 'text', 'status')->where('user_id', auth()->id())->orderBy('created_at', 'DESC')->get();
 
         return response()->json(['todos' => $todos]);
     }
@@ -22,7 +22,7 @@ class TodoController extends Controller
         ]);
 
         $todo = Todo::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->id(),
             'text' => $request->text,
             'status' => 'ongoing',
         ]);

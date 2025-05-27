@@ -3,7 +3,7 @@
 <!--begin::Head-->
 
 <head>
-    <title>{{ ucwords($business->name) }} | Order #{{ $order->order_number }}</title>
+    <title>Ruban By Salwa | Order #{{ $order->order_number }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -152,7 +152,7 @@
                                             <!--end::Logo-->
                                             <!--begin::Text-->
                                             <div class="text-sm-end fw-semibold fs-4 mt-7">
-                                                <div class="text-dark">{{ ucwords($business->name) }}</div>
+                                                <div class="text-dark">Ruban By Salwa</div>
                                                 <div>{{ $business->email }}</div>
                                                 <div>{{ $business->phone }}</div>
                                                 <div>{{ $business->address }}</div>

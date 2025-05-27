@@ -249,7 +249,7 @@
 
 
                 <!-- Peak Hours Analysis -->
-                <div class="col-md-6 mb-auto">
+                <div class="offset-md-3 col-md-6 mb-auto">
                     <div class="card card-flush h-100 shadow-sm">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Peak Hours Analysis</h3>
@@ -261,19 +261,6 @@
                         </div>
                         <div class="card-body">
                             <canvas id="peakHoursChart" class="w-100"></canvas>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Cash Flow Chart -->
-                <div class="col-md-6 mb-auto">
-                    <div class="card card-flush h-100 shadow-sm">
-                        <div class="card-header">
-                            <h3 class="card-title">Daily Cash Flow</h3>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="cashFlowChart" class="w-100"></canvas>
                         </div>
                     </div>
                 </div>
@@ -288,9 +275,6 @@
         const assetBaseUrl = "{{ asset('') }}";
         const hourlyOrders = @json($hourly_orders);
         const currency = @json($currency);
-        const cashFlowDates = @json($cash_flow_dates);
-        const cashFlowDiff = @json($cash_flow_diff);
-        const reports = @json($reports);
 
         document.addEventListener('DOMContentLoaded', function() {
             initializeCharts();
@@ -480,57 +464,6 @@
             // Add event listener for date changes
             datePicker.addEventListener('change', (e) => {
                 updateChart(e.target.value);
-            });
-        }
-
-        function initializeCashFlowChart() {
-            const cashFlowCtx = document.getElementById('cashFlowChart');
-            if (!cashFlowCtx) return;
-
-            const dailyCashFlow = reports.map(report => ({
-                date: report.date,
-                netFlow: report.end_cash - report.start_cash
-            }));
-
-            new Chart(cashFlowCtx, {
-                type: 'line',
-                data: {
-                    labels: dailyCashFlow.map(flow => flow.date),
-                    datasets: [{
-                        label: 'Net Cash Flow',
-                        data: dailyCashFlow.map(flow => flow.netFlow),
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => {
-                                    return `Net Flow: ${formatCurrency(context.raw)}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
-                                }
-                            }
-                        }
-                    }
-                }
             });
         }
 

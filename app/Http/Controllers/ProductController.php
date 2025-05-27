@@ -48,7 +48,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
-            $filename = auth()->user()->id . '_' . time() . '.' . $ext;
+            $filename = auth()->id() . '_' . time() . '.' . $ext;
             $image = Image::make($file);
             $image->fit(300, 300, function ($constraint) {
                 $constraint->upsize();
@@ -138,7 +138,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
-            $filename = auth()->user()->id . '_' . time() . '.' . $ext;
+            $filename = auth()->id() . '_' . time() . '.' . $ext;
             $image = Image::make($file);
             $image->fit(300, 300, function ($constraint) {
                 $constraint->upsize();

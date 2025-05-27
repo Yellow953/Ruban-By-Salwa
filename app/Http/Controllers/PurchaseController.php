@@ -208,7 +208,7 @@ class PurchaseController extends Controller
             ]);
             $purchase->delete();
 
-            return redirect()->back()->with('error', 'Purchase deleted successfully!');
+            return redirect()->back()->with('error', 'Purchase deleted successfully and Products returned!');
         } else {
             return redirect()->back()->with('error', 'Unothorized Access...');
         }

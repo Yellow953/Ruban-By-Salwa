@@ -50,7 +50,7 @@ class AppController extends Controller
             $text = '';
 
             $order = Order::create([
-                'cashier_id' => auth()->user()->id,
+                'cashier_id' => auth()->id(),
                 'client_id' => $request->client_id,
                 'currency_id' => auth()->user()->currency_id,
                 'order_number' => Order::generate_number(),
@@ -132,7 +132,7 @@ class AppController extends Controller
             $discount = $request->discount ?? 0;
 
             $order = Order::create([
-                'cashier_id' => auth()->user()->id,
+                'cashier_id' => auth()->id(),
                 'client_id' => $request->client_id,
                 'currency_id' => auth()->user()->currency_id,
                 'order_number' => Order::generate_number(),
