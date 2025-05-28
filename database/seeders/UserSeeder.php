@@ -13,9 +13,9 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'admin',
-                'phone' => '96170285659',
+                'phone' => '9613394873',
                 'role' => 'admin',
-                'email' => 'test@admin.com',
+                'email' => 'admin@rubanbysalwa.shop',
                 'image' => 'assets/images/default_profile.png',
                 'password' => Hash::make('qwe123'),
                 'currency_id' => 1,
@@ -24,9 +24,9 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'stock',
-                'phone' => '96170285659',
+                'phone' => '9613394873',
                 'role' => 'stock',
-                'email' => 'test@stock.com',
+                'email' => 'stock@rubanbysalwa.shop',
                 'image' => 'assets/images/default_profile.png',
                 'password' => Hash::make('qwe123'),
                 'currency_id' => 1,
@@ -35,9 +35,9 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'user',
-                'phone' => '96170285659',
+                'phone' => '9613394873',
                 'role' => 'user',
-                'email' => 'test@test.com',
+                'email' => 'user@rubanbysalwa.shop',
                 'image' => 'assets/images/default_profile.png',
                 'password' => Hash::make('qwe123'),
                 'currency_id' => 1,

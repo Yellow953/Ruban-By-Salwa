@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
-            ProductSeeder::class,
-            ClientSeeder::class,
+            // ProductSeeder::class,
+            // ClientSeeder::class,
             SearchRouteSeeder::class,
             BankNoteSeeder::class,
         ]);
