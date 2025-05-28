@@ -15,11 +15,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4 order-2 order-md-1">
-            <div class="card my-4 mt-md-0 shadow-sm radius-10px">
+            <div class="card border-custom my-4 mt-md-0 shadow-sm radius-10px">
                 <img src="{{ asset('assets/images/sales_order.png') }}" alt="Sales Order" class="img-fluid">
             </div>
 
-            <div class="card p-4 my-4 mt-md-0 shadow-sm products-container">
+            <div class="card border-custom p-4 my-4 mt-md-0 shadow-sm products-container">
                 <h2 class="text-center text-primary my-4">Products</h2>
 
                 <div class="d-flex p-4 mb-4">
@@ -60,7 +60,7 @@
             <form action="{{ route('purchases.create') }}" method="post" enctype="multipart/form-data">
                 @csrf
 
-                <div class="card p-4 my-4 mt-md-0 shadow-sm">
+                <div class="card border-custom p-4 my-4 mt-md-0 shadow-sm">
                     <h2 class="text-center text-primary my-4">New Purchase</h2>
 
                     <div class="row">
@@ -143,7 +143,7 @@
                     </div>
                 </div>
 
-                <div class="card p-4 mb-4 shadow-sm">
+                <div class="card border-custom p-4 mb-4 shadow-sm">
                     <h2 class="text-center text-primary my-4">Items</h2>
 
                     <div class="py-4 px-5">
@@ -157,7 +157,7 @@
                     </div>
                 </div>
 
-                <div class="card mb-4 shadow-sm">
+                <div class="card border-custom mb-4 shadow-sm">
                     <div class="d-flex align-items-center justify-content-around py-4">
                         <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
                         <button type="submit" class="btn btn-primary">Submit</button>

@@ -15,7 +15,7 @@
             <!-- Quick Stats Row -->
             <div class="row g-5 g-xl-10 mb-5">
                 <div class="col-md-4">
-                    <div class="card card-flush h-100 shadow-sm hover-elevate-up">
+                    <div class="card border-custom card-flush h-100 shadow-sm hover-elevate-up">
                         <div class="card-body p-4">
                             <div class="d-flex flex-column">
                                 <div class="text-primary fw-semibold mb-2">Today's Sales</div>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card card-flush h-100 shadow-sm hover-elevate-up">
+                    <div class="card border-custom card-flush h-100 shadow-sm hover-elevate-up">
                         <div class="card-body p-4">
                             <div class="d-flex flex-column">
                                 <div class="text-success fw-semibold mb-2">Today's Profit</div>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card card-flush h-100 shadow-sm hover-elevate-up">
+                    <div class="card border-custom card-flush h-100 shadow-sm hover-elevate-up">
                         <div class="card-body p-4">
                             <div class="d-flex flex-column">
                                 <div class="text-info fw-semibold mb-2">Today's Orders</div>
@@ -53,7 +53,7 @@
             <div class="row g-5 g-xl-10 mb-5">
                 <!-- Today's Orders List -->
                 <div class="col-md-8">
-                    <div class="card card-flush h-100 shadow-sm">
+                    <div class="card border-custom card-flush h-100 shadow-sm">
                         <div class="card-header pt-7">
                             <h3 class="card-title align-items-start flex-column">
                                 <span class="card-label fw-bold text-gray-800">Today's Orders</span>
@@ -90,7 +90,7 @@
 
                 <!-- Report Generation -->
                 <div class="col-md-4">
-                    <div class="card card-flush h-100 shadow-sm">
+                    <div class="card border-custom card-flush h-100 shadow-sm">
                         <div class="card-header">
                             <h3 class="card-title">Generate Reports</h3>
                         </div>
@@ -133,7 +133,7 @@
             <div class="row g-5 g-xl-10 mb-5">
                 <!-- Product Performance -->
                 <div class="col-md-12">
-                    <div class="card card-flush h-100 shadow-sm">
+                    <div class="card border-custom card-flush h-100 shadow-sm">
                         <div class="card-header">
                             <h3 class="card-title">Product Performance</h3>
                         </div>
@@ -158,11 +158,9 @@
 
             <!-- Purchases -->
             <div class="row g-5 g-xl-10 mb-5">
-
-
                 <!-- Recent Purchases -->
                 <div class="col-md-6">
-                    <div class="card card-flush h-100 shadow-sm">
+                    <div class="card border-custom card-flush h-100 shadow-sm">
                         <div class="card-header">
                             <h3 class="card-title">Recent Purchases</h3>
                             <div class="card-toolbar">
@@ -200,7 +198,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card card-flush h-100 shadow-sm">
+                    <div class="card border-custom card-flush h-100 shadow-sm">
                         <div class="card-header">
                             <h3 class="card-title">Recent Expenses</h3>
                             <div class="card-toolbar">
@@ -246,11 +244,9 @@
             </div>
 
             <div class="row g-5 g-xl-10 mb-5">
-
-
                 <!-- Peak Hours Analysis -->
                 <div class="offset-md-3 col-md-6 mb-auto">
-                    <div class="card card-flush h-100 shadow-sm">
+                    <div class="card border-custom card-flush h-100 shadow-sm">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Peak Hours Analysis</h3>
                             <div>

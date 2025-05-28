@@ -17,7 +17,7 @@
                     <input type="hidden" name="grand_total" value="0">
                     <input type="text" id="barcode_input" class="form-control d-none">
 
-                    <div class="card card-flush bg-body border-shadow">
+                    <div class="card card-flush bg-body border-custom">
                         <div class="card-header px-4 py-5">
                             <h3 class="card-title fw-bold text-gray-800 fs-2qx">Current Order</h3>
                             <div class="card-toolbar">
@@ -96,7 +96,7 @@
 
             <!-- Main content with product categories and items -->
             <div class="d-flex flex-row-fluid justify-content-center mb-10 mb-xl-0">
-                <div class="card card-p-0 p-5 mx-3 border-shadow">
+                <div class="card card-p-0 p-5 mx-3 border-custom">
                     <div class="card-body">
                         <div class="mb-5">
                             <input type="text" id="product_search" class="form-control"
@@ -168,7 +168,7 @@
 
             <!-- Quick actions -->
             <div class="d-flex flex-row flex-md-column">
-                <div class="card p-1 p-md-4 d-flex flex-row flex-md-column border-shadow" id="quick-actions">
+                <div class="card p-1 p-md-4 d-flex flex-row flex-md-column border-custom" id="quick-actions">
                     <a href="#" class="btn btn-primary text-center mb-0 mb-md-4 mx-2 mx-md-0 p-3 p-md-4 rotate-90"
                         data-bs-toggle="modal" data-bs-target="#kt_modal_new_client">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

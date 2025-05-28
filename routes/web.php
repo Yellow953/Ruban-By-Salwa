@@ -110,7 +110,6 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('reports')->group(function () {
             Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
             Route::get('/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
-            Route::post('/create', [ReportController::class, 'create'])->name('reports.create');
             Route::get('/{report}/delete', [ReportController::class, 'destroy'])->name('reports.destroy');
             Route::get('/{report}/show', [ReportController::class, 'show'])->name('reports.show');
             Route::get('/', [ReportController::class, 'index'])->name('reports');
@@ -240,7 +239,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('quick')->group(function () {
         Route::post('/new_client', [ClientController::class, 'new_client'])->name('quick.new_client');
         Route::post('/new_debt', [DebtController::class, 'new_debt'])->name('quick.new_debt');
-        Route::post('/new_report', [ReportController::class, 'new_report'])->name('quick.new_report');
+        Route::post('/reports/create', [ReportController::class, 'create'])->name('reports.create');
     });
 
     // Fetch Clients

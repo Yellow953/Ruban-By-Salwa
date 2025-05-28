@@ -10,7 +10,7 @@
         spinner.classList.remove("d-none");
 
         try {
-            const response = await fetch("/reports/create", {
+            const response = await fetch("{{ route('reports.create') }}", {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": document.querySelector(

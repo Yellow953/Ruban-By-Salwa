@@ -16,7 +16,7 @@
     <div class="row mb-4">
         <!-- Client Information Card -->
         <div class="col-md-4">
-            <div class="card">
+            <div class="card border-custom">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Client Information</h5>
                 </div>
@@ -24,7 +24,7 @@
                     <div class="d-flex align-items-center mb-4">
                         <div class="me-3">
                             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
-                                style="width: 100px; height: 100px;">
+                                style="width: 75px; height: 75px;">
                                 <i class="fas fa-user text-white" style="font-size:40px"></i>
                             </div>
                         </div>
@@ -44,14 +44,14 @@
                 </div>
             </div>
             <div class="mt-4">
-                <img src="{{ asset('assets/images/history.png') }}" class="img-fluid" alt="Description of image"
-                    style="border-radius: 10px">
+                <img src="{{ asset('assets/images/history.png') }}" class="img-fluid border-custom"
+                    alt="Description of image" style="border-radius: 10px">
             </div>
         </div>
 
         <!-- Order History Card -->
         <div class="col-md-8">
-            <div class="card">
+            <div class="card border-custom">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Order History</h5>
                 </div>
@@ -61,15 +61,16 @@
                             <thead>
                                 <tr>
                                     <th class="col-3">Order Number</th>
-                                    <th class="col-3">Items</th>
-                                    <th class="col-3">Total</th>
-                                    <th class="col-3">Order Date</th>
+                                    <th class="col-2">Order Date</th>
+                                    <th class="col-5">Items</th>
+                                    <th class="col-2">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($orders as $order)
                                 <tr>
                                     <td>ORDER #{{ $order->order_number }}</td>
+                                    <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
                                     <td>
                                         @foreach ($order->items as $item)
                                         {{ $item->product->name }}: {{ $item->quantity }} pc(s) -> {{ $item->total }}
@@ -77,7 +78,6 @@
                                         @endforeach
                                     </td>
                                     <td>${{ number_format($order->total, 2) }}</td>
-                                    <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
                                 </tr>
                                 @empty
                                 <tr>

@@ -17,7 +17,7 @@
         <!--begin::Content container-->
         <div id="kt_app_content_container" class="app-container container-xxl">
             <!--begin::Navbar-->
-            <div class="card mb-5 mb-xxl-8">
+            <div class="card border-custom mb-5 mb-xxl-8">
                 <div class="card-body pt-9 pb-0">
                     <!--begin::Details-->
                     <div class="d-flex flex-wrap flex-sm-nowrap">
@@ -211,7 +211,7 @@
 
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
-                    <div class="card user-info-card p-8">
+                    <div class="card border-custom user-info-card p-8">
                         <h4 class="card-title mb-4">Business Overview</h4>
 
                         <div class="user-info">
@@ -235,7 +235,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
-                    <div class="card user-info-card p-8">
+                    <div class="card border-custom user-info-card p-8">
                         <h4 class="card-title mb-4">Edit Business</h4>
                         <form action="{{ route('business.update') }}" method="POST" enctype="multipart/form-data"
                             class="form">
@@ -279,7 +279,6 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-4 form-label">Logo</label>
@@ -323,7 +322,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
-                    <div class="card col-md-4 user-info-card p-8">
+                    <div class="card border-custom col-md-4 user-info-card p-8">
                         <h4 class="card-title mb-4">Users</h4>
                         <p class="card-text text-muted my-5">
                         <ul>
@@ -335,8 +334,8 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
-                    <div class="row gap-5">
-                        <div class="card col-md-5 user-info-card p-8">
+                    <div class="row gap-5 px-2">
+                        <div class="card border-custom col user-info-card p-8">
                             <h4 class="card-title mb-4">Change Password</h4>
                             <form action="{{ route('business.change_password') }}" enctype="multipart/form-data"
                                 method="post">
@@ -353,7 +352,7 @@
                             </form>
                         </div>
 
-                        <div class="card col-md-6 user-info-card p-8">
+                        <div class="card border-custom col user-info-card p-8">
                             <h4 class="card-title mb-4">Deactivate Account</h4>
                             <p class="card-text text-muted text-center my-5">
                                 Once your account is deactivated, you account will be deleted and cannot be
@@ -367,10 +366,9 @@
                 </div>
             </div>
         </div>
+        <!--end::Content container-->
     </div>
-    <!--end::Content container-->
-</div>
-<!--end::Content-->
+    <!--end::Content-->
 </div>
 <!--end::Content wrapper-->
 @endsection

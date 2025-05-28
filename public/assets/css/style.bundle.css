@@ -62048,11 +62048,3 @@ body,
         color: #ffffff !important;
     }
 }
-
-.border-custom {
-    border: 3px solid var(--bs-border-dashed-color);
-}
-
-.border-custom:hover {
-    border: 3px solid var(--bs-primary);
-}

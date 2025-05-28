@@ -418,7 +418,7 @@
 
         createDraftsUI() {
             const draftsHTML = `
-                <div class="card mt-4 border-shadow" id="drafts-container">
+                <div class="card mt-4 border-custom" id="drafts-container">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0">Saved Drafts</h4>
                         <span>

@@ -11,6 +11,7 @@
     --danger: #dc3545;
     --warning: #ffc107;
     --muted: #6c757d;
+    --border: #e1e3ea;
 }
 
 .alert {
@@ -934,6 +935,10 @@ table thead tr th {
 
 .sidenav-title {
     font-size: 1.25rem;
+}
+
+.border-custom {
+    border: 3px solid var(--border);
 }
 
 @media only screen and (max-width: 600px) {
