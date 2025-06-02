@@ -30,6 +30,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping
             'Cost',
             'Price',
             'Description',
+            'Location',
             'Created At',
         ];
     }
@@ -43,6 +44,7 @@ class ProductsExport implements FromCollection, WithHeadings, WithMapping
             $row->cost,
             $row->price,
             $row->description,
+            $row->location,
             $row->created_at,
         ];
     }

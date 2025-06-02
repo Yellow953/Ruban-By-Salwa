@@ -21,14 +21,14 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="required form-label">Name</label>
                             <input type="text" class="form-control" name="name" placeholder="Enter Name..."
                                 value="{{ old('name') }}" required />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label required">Category</label>
                             <select name="category_id" class="form-select" data-control="select2" required
@@ -39,6 +39,13 @@
                                     '' }}>{{ ucwords($category->name) }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" name="location" placeholder="Enter Location..."
+                                value="{{ old('location') }}" />
                         </div>
                     </div>
                 </div>

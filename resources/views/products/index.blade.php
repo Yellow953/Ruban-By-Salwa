@@ -67,7 +67,7 @@
                 <!--begin::Row-->
                 <div class="row g-8 mb-8">
                     <!--begin::Col-->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="fs-6 form-label fw-bold text-dark">Category</label>
                         <select name="category_id" class="form-select" data-control="select2"
                             data-placeholder="Select an option">
@@ -81,10 +81,17 @@
                     </div>
                     <!--end::Col-->
                     <!--begin::Col-->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="fs-6 form-label fw-bold text-dark">Barcode</label>
                         <input type="text" class="form-control form-control-solid border" name="barcode"
                             value="{{ request()->query('barcode') }}" placeholder="Enter Barcode..." />
+                    </div>
+                    <!--end::Col-->
+                    <!--begin::Col-->
+                    <div class="col-md-4">
+                        <label class="fs-6 form-label fw-bold text-dark">Location</label>
+                        <input type="text" class="form-control form-control-solid border" name="location"
+                            value="{{ request()->query('location') }}" placeholder="Enter Location..." />
                     </div>
                     <!--end::Col-->
                     <!--begin::Col-->

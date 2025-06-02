@@ -46,6 +46,7 @@
                 <th>Cost</th>
                 <th>Price</th>
                 <th>Description</th>
+                <th>Location</th>
                 <th>Created At</th>
             </tr>
         </thead>
@@ -58,6 +59,7 @@
                 <td>{{ $product->cost }}</td>
                 <td>{{ $product->price }}</td>
                 <td>{{ $product->description }}</td>
+                <td>{{ $product->location }}</td>
                 <td>{{ $product->created_at }}</td>
             </tr>
             @endforeach

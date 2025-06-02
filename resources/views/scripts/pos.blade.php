@@ -755,8 +755,8 @@
         async submitOrderToServer(orderData) {
             const formData = new FormData(this.cachedElements.form);
 
-            formData.append('amount_paid', Math.round(orderData.amountPaid));
-            formData.append('change_due', Math.round(orderData.changeDue));
+            formData.append('amount_paid', orderData.amountPaid);
+            formData.append('change_due', orderData.changeDue);
             formData.append('payment_currency', orderData.paymentCurrency);
             formData.append('exchange_rate', orderData.exchangeRate);
 

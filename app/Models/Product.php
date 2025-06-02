@@ -67,6 +67,10 @@ class Product extends Model
                 $query->where('barcode', 'LIKE', '%' . request('barcode') . '%');
             });
         }
+        if (request('location')) {
+            $location = request('location');
+            $q->where('location', 'LIKE', "%{$location}%");
+        }
 
         return $q;
     }

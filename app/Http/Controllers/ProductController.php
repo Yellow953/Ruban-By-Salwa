@@ -66,6 +66,7 @@ class ProductController extends Controller
             'price' => $request->price,
             'category_id' => $request->category_id,
             'description' => $request->description,
+            'location' => $request->location,
             'image' => $path,
         ]);
 
@@ -155,6 +156,7 @@ class ProductController extends Controller
             'price' => $request->price,
             'category_id' => $request->category_id,
             'description' => $request->description,
+            'location' => $request->location,
             'image' => $path,
         ]);
 
