@@ -288,19 +288,6 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link {{ request()->routeIs('analytics*') ? 'active' : '' }}"
-                        href="{{ route('analytics') }}">
-                        <span class="menu-icon">
-                            <i class="bi bi-bar-chart"></i>
-                        </span>
-                        <span class="menu-title">Analytics</span>
-                    </a>
-                    <!--end:Menu link-->
-                </div>
-                <!--end:Menu item-->
-                <!--begin:Menu item-->
-                <div class="menu-item">
-                    <!--begin:Menu link-->
                     <a class="menu-link {{ request()->routeIs('notifications*') ? 'active' : '' }}"
                         href="{{ route('notifications') }}">
                         <span class="menu-icon">

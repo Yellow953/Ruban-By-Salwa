@@ -157,7 +157,8 @@
                             </td>
                             <td>
                                 <div class="text-center">
-                                    {{ Str::limit($product->description, 50) }}
+                                    {{ Str::limit($product->description, 50) }} <br>
+                                    {{ $product->location ? 'Location: ' . $product->location : '' }}
                                 </div>
                             </td>
                             <td>

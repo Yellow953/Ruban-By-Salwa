@@ -20,7 +20,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::select('id', 'name', 'quantity', 'cost', 'price', 'image', 'category_id', 'description')->filter()->orderBy('id', 'desc')->paginate(25);
+        $products = Product::select('id', 'name', 'quantity', 'cost', 'price', 'image', 'category_id', 'description', 'location')->filter()->orderBy('id', 'desc')->paginate(25);
         $categories = Category::select('id', 'name')->get();
         $currency = auth()->user()->currency;
 
