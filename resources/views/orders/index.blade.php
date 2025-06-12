@@ -174,6 +174,10 @@
                                     class="btn btn-icon btn-primary btn-sm me-1">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
+                                <a href="{{ route('orders.return', $order->id) }}"
+                                    class="btn btn-icon btn-warning btn-sm me-1">
+                                    <i class="bi bi-arrow-return-left"></i>
+                                </a>
                                 @if($order->can_delete())
                                 <a href="{{ route('orders.destroy', $order->id) }}"
                                     class="btn btn-icon btn-danger btn-sm show_confirm" data-toggle="tooltip"

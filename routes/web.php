@@ -64,7 +64,8 @@ Route::middleware(['auth'])->group(function () {
         // My Business Routes
         Route::prefix('business')->group(function () {
             Route::post('/update', [ProfileController::class, 'business_update'])->name('business.update');
-            Route::post('/change_password', [ProfileController::class, 'business_change_password'])->name('business.change_password');
+            Route::post('/password/update', [ProfileController::class, 'business_change_password'])->name('business.password.update');
+            Route::get('/password/reset', [ProfileController::class, 'business_reset_password'])->name('business.password.reset');
             Route::get('/', [ProfileController::class, 'business'])->name('business');
         });
 
@@ -176,6 +177,8 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('orders')->group(function () {
             Route::get('/export', [OrderController::class, 'export'])->name('orders.export');
             Route::get('/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
+            Route::get('/{order}/return', [OrderController::class, 'return'])->name('orders.return');
+            Route::post('/{order}/process-return', [OrderController::class, 'processReturn'])->name('orders.process-return');
             Route::get('/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy');
             Route::get('/{order}/show', [OrderController::class, 'show'])->name('orders.show');
             Route::get('/', [OrderController::class, 'index'])->name('orders');

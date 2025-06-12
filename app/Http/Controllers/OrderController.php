@@ -11,6 +11,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -67,5 +68,93 @@ class OrderController extends Controller
         $pdf = Pdf::loadView('orders.pdf', compact('orders'));
 
         return $pdf->download('Orders.pdf');
+    }
+
+    public function return(Order $order)
+    {
+        $currency = $order->currency;
+        return view('orders.return', compact('order', 'currency'));
+    }
+
+    public function processReturn(Request $request, Order $order)
+    {
+        $request->validate([
+            'return_quantities' => 'required|array',
+            'return_quantities.*' => 'required|integer|min:0'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $returnQuantities = $request->return_quantities;
+            $totalReturnAmount = 0;
+            $returnedItems = [];
+
+            foreach ($order->items as $item) {
+                $returnQuantity = $returnQuantities[$item->id] ?? 0;
+
+                if ($returnQuantity > 0) {
+                    if ($returnQuantity > $item->quantity) {
+                        throw new \Exception("Return quantity cannot be greater than original quantity for item: {$item->product->name}");
+                    }
+
+                    // Update product quantity
+                    $item->product->update([
+                        'quantity' => $item->product->quantity + $returnQuantity
+                    ]);
+
+                    // Calculate return amount
+                    $returnAmount = $returnQuantity * $item->unit_price;
+                    $totalReturnAmount += $returnAmount;
+
+                    // Update order item return status
+                    $item->update([
+                        'returned' => true,
+                        'returned_quantity' => $returnQuantity,
+                        'returned_at' => now(),
+                        'total' => $item->total - $returnAmount,
+                    ]);
+
+                    $returnedItems[] = [
+                        'product' => $item->product,
+                        'return_quantity' => $returnQuantity,
+                        'unit_price' => $item->unit_price,
+                        'return_amount' => $returnAmount,
+                        'variant_details' => $item->variant_details
+                    ];
+                }
+            }
+
+            if (empty($returnedItems)) {
+                throw new \Exception('No items selected for return');
+            }
+
+            $order->update([
+                'sub_total' => ($order->sub_total - $totalReturnAmount),
+                'total' => ($order->total - $totalReturnAmount),
+            ]);
+
+            // Log the return
+            $text = 'User ' . ucwords(auth()->user()->name) . ' processed return for Order NO: ' . $order->order_number . ' { ';
+            foreach ($returnedItems as $item) {
+                $text .= "Product: {$item['product']->name}, Quantity: {$item['return_quantity']}, Amount: {$item['return_amount']} | ";
+            }
+            $text .= " } , Total Return Amount: {$totalReturnAmount}, datetime: " . now();
+
+            Log::create(['text' => $text]);
+
+            DB::commit();
+
+            // Return the receipt view
+            $business = Business::first();
+            $currency = $order->currency;
+
+            return view('orders.return-receipt', compact('order', 'returnedItems', 'totalReturnAmount', 'business', 'currency'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Failed to process return: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 }

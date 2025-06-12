@@ -104,7 +104,7 @@
                                 <!-- begin::Wrapper-->
                                 <div class="mw-lg-950px mx-auto w-100">
                                     <!-- begin::Header-->
-                                    <div class="d-flex justify-content-between flex-column flex-sm-row mb-19">
+                                    <div class="d-flex justify-content-between flex-row mb-19">
                                         <div>
                                             <h4 class="fw-bolder text-gray-800 fs-2qx pe-5 pb-7">Order</h4>
                                             <div class="flex-root d-flex flex-column mt-4">
@@ -183,9 +183,9 @@
                                                         class="table table-bordered border-secondary align-middle table-row-dashed fs-6 gy-5 mb-0">
                                                         <thead>
                                                             <tr class="fs-6 fw-bold text-dark">
-                                                                <th class="min-w-175px fs-3">Products</th>
-                                                                <th class="min-w-80px text-end fs-3">QTY</th>
-                                                                <th class="min-w-100px text-end fs-3">Total</th>
+                                                                <th class="min-w-100px fs-3">Products</th>
+                                                                <th class="text-end fs-3">QTY</th>
+                                                                <th class="text-end fs-3">Total</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody class="fw-semibold text-gray-600">
@@ -221,13 +221,20 @@
                                                                                 @endforeach
                                                                             </div>
                                                                             @endif
+                                                                            @if($item->returned)
+                                                                            <div class="badge badge-light-danger mt-2">
+                                                                                Returned ({{ $item->returned_quantity }}
+                                                                                units)
+                                                                            </div>
+                                                                            @endif
                                                                         </div>
                                                                         <!--end::Title-->
                                                                     </div>
                                                                 </td>
                                                                 <!--end::Product-->
                                                                 <!--begin::Quantity-->
-                                                                <td class="text-end">{{ $item->quantity }}</td>
+                                                                <td class="text-end">{{ $item->quantity -
+                                                                    $item->returned_quantity }}</td>
                                                                 <!--end::Quantity-->
                                                                 <!--begin::Total-->
                                                                 <td class="text-end">{{ $currency->symbol }}{{

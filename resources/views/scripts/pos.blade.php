@@ -13,7 +13,7 @@
                 currency: this.systemCurrency,
                 minimumFractionDigits: 2
             });
-            this.ENCRYPTED_PASSWORD = {{ $encryptedPassword ?? 'null' }};
+            this.ENCRYPTED_PASSWORD = "{{ $encryptedPassword ?? 'null' }}";
 
             // State
             this.orderItems = [];
@@ -1245,7 +1245,12 @@
 
         // Discount Handling
         async showDiscountInput() {
-            if(this.ENCRYPTED_PASSWORD != null){
+            if(this.ENCRYPTED_PASSWORD == null || this.ENCRYPTED_PASSWORD == "null"){
+                this.cachedElements.discountInput.value = this.discount;
+                this.cachedElements.discountElement.classList.add('d-none');
+                this.cachedElements.discountInput.classList.remove('d-none');
+                this.cachedElements.discountInput.focus();
+            }else{
                 const password = prompt("Enter password to change discount:");
                 if (!password) return;
 
@@ -1260,11 +1265,6 @@
                 } else {
                     alert("Incorrect password");
                 }
-            }else{
-                this.cachedElements.discountInput.value = this.discount;
-                this.cachedElements.discountElement.classList.add('d-none');
-                this.cachedElements.discountInput.classList.remove('d-none');
-                this.cachedElements.discountInput.focus();
             }
         }
 

@@ -336,8 +336,8 @@
                 <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
                     <div class="row gap-5 px-2">
                         <div class="card border-custom col user-info-card p-8">
-                            <h4 class="card-title mb-4">Change Password</h4>
-                            <form action="{{ route('business.change_password') }}" enctype="multipart/form-data"
+                            <h4 class="card-title mb-4">Administrator Password</h4>
+                            <form action="{{ route('business.password.update') }}" enctype="multipart/form-data"
                                 method="post">
                                 @csrf
 
@@ -346,8 +346,11 @@
                                     <input type="text" class="form-control" name="password" required />
                                 </div>
 
-                                <div class="text-end mt-5">
-                                    <button type="submit" class="btn btn-danger w-md-25">Change</button>
+                                <div class="d-flex justify-content-between mt-5">
+                                    <a href="{{ route('business.password.reset') }}" class="btn btn-danger">
+                                        Reset Pasword
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">Change</button>
                                 </div>
                             </form>
                         </div>
