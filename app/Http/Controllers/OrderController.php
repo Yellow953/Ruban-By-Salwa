@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('stock')->only(['destroy', 'export', 'pdf']);
+        $this->middleware('password.protect')->only(['index', 'show', 'return', 'processReturn']);
+    }
+
     public function index()
     {
         $orders = Order::select('id', 'order_number', 'cashier_id', 'client_id', 'currency_id', 'sub_total', 'tax', 'discount', 'total', 'products_count')->filter()->orderBy('id', 'desc')->paginate(25);

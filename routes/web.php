@@ -173,17 +173,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('products');
         });
 
-        // Orders
-        Route::prefix('orders')->group(function () {
-            Route::get('/export', [OrderController::class, 'export'])->name('orders.export');
-            Route::get('/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
-            Route::get('/{order}/return', [OrderController::class, 'return'])->name('orders.return');
-            Route::post('/{order}/process-return', [OrderController::class, 'processReturn'])->name('orders.process-return');
-            Route::get('/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy');
-            Route::get('/{order}/show', [OrderController::class, 'show'])->name('orders.show');
-            Route::get('/', [OrderController::class, 'index'])->name('orders');
-        });
-
         // Purchases Routes
         Route::prefix('purchases')->group(function () {
             Route::get('/export', [PurchaseController::class, 'export'])->name('purchases.export');
@@ -207,6 +196,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/deactivate', [ProfileController::class, 'deactivate'])->name('profile.deactivate');
         Route::post('/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/', [ProfileController::class, 'show'])->name('profile');
+    });
+
+    // Orders
+    Route::prefix('orders')->group(function () {
+        Route::get('/export', [OrderController::class, 'export'])->name('orders.export');
+        Route::get('/pdf', [OrderController::class, 'pdf'])->name('orders.pdf');
+        Route::match(['get', 'post'], '/{order}/return', [OrderController::class, 'return'])->name('orders.return');
+        Route::post('/{order}/process-return', [OrderController::class, 'processReturn'])->name('orders.process-return');
+        Route::get('/{order}/destroy', [OrderController::class, 'destroy'])->name('orders.destroy');
+        Route::match(['get', 'post'], '/{order}/show', [OrderController::class, 'show'])->name('orders.show');
+        Route::match(['get', 'post'], '/', [OrderController::class, 'index'])->name('orders');
     });
 
     // Logs

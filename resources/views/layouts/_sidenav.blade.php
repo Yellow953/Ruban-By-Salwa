@@ -66,6 +66,21 @@
                     <!--end:Menu content-->
                 </div>
                 <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                <div class="menu-item">
+                    <!--begin:Menu link-->
+                    <a class="menu-link {{ request()->routeIs('orders*') ? 'active' : '' }}"
+                        href="{{ route('orders') }}">
+                        <span class="menu-icon">
+                            <i class="bi bi-bag"></i>
+                        </span>
+                        <span class="menu-title">Orders</span>
+                    </a>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
@@ -79,6 +94,7 @@
                     <!--end:Menu link-->
                 </div>
                 <!--end:Menu item-->
+
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->

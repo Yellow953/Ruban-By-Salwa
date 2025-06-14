@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'stock' => \App\Http\Middleware\Stock::class,
             'admin' => \App\Http\Middleware\Admin::class,
+            'password.protect' => \App\Http\Middleware\PasswordProtect::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
